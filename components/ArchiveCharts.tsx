@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect } from 'react';
 import Intensity from "./Intensity";
 import AceTike from "./AceTike";
 import WindsAndPressures from "./SeasonIntensity";
@@ -8,8 +8,23 @@ import SeasonAceTike from "./SeasonAceTike";
 
 const ArchiveCharts = () => {
   const [expandedChart, setExpandedChart] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   const handleChartTap = (chartName: string) => {
+    // Only allow chart expansion on mobile devices
+    if (!isMobile) return;
+    
     if (expandedChart === chartName) {
       setExpandedChart(null);
     } else {
