@@ -11,7 +11,7 @@ const ArchivedStorms = () => {
   if (!season) return null;
 
   const dot = (color: string) => {
-    return new divIcon({
+    return divIcon({
       className: 'bg-opacity-0',
       html: `<svg fill=${color} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle stroke="black" stroke-width="10" cx="50" cy="50" r="40" /></svg>`,
       iconSize: [10, 10]
@@ -19,7 +19,7 @@ const ArchivedStorms = () => {
   };
 
   const strike = (color: string) => {
-    return new divIcon({
+    return divIcon({
       className: 'bg-opacity-0',
       html: `<svg fill=${color}
               xmlns:dc="http://purl.org/dc/elements/1.1/"
