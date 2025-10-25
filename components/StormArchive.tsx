@@ -33,13 +33,13 @@ const StormArchive = () => {
 
     const startArray = data[0].date.toString().split('');
     const startYear = startArray.slice(0,4).join('');
-    const startMonth = startArray.slice(4,6).join('');
-    const startDay = startArray.slice(-2).join('');
+    const startMonth = parseInt(startArray.slice(4,6).join(''));
+    const startDay = parseInt(startArray.slice(-2).join(''));
     const startDate = `${startMonth}/${startDay}/${startYear}`;
     const endArray = data[data.length - 1].date.toString().split('');    
     const endYear = endArray.slice(0,4).join('');
-    const endMonth = endArray.slice(4,6).join('');
-    const endDay = endArray.slice(-2).join('');
+    const endMonth = parseInt(endArray.slice(4,6).join(''));
+    const endDay = parseInt(endArray.slice(-2).join(''));
     const endDate = `${endMonth}/${endDay}/${endYear}`;
     const duration = `${startDate}-${endDate}`;
     setDuration(duration);

@@ -273,9 +273,9 @@ const convertToUTC = (dateStr: string) => {
     // Apply the offset to get EST time
     const estDate = new Date(localDate.getTime() + (estOffset * 60 * 60 * 1000));
     
-    // Format to required format: "MM/DD/YYYY at HH:MM AM/PM EST"
-    const monthStr = (estDate.getMonth() + 1).toString().padStart(2, '0');
-    const dayStr = estDate.getDate().toString().padStart(2, '0');
+    // Format to required format: "M/D/YYYY at HH:MM AM/PM EST"
+    const monthStr = (estDate.getMonth() + 1).toString();
+    const dayStr = estDate.getDate().toString();
     const yearStr = estDate.getFullYear();
     
     // Convert to 12-hour format

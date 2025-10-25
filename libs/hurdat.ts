@@ -19,6 +19,8 @@ interface StormDataPoint {
   max_wind_kt: number;
   record?: string;
   min_pressure_mb?: number;
+  lat: number;
+  lng: number;
   '34kt_wind_nm'?: WindRadii;
   '50kt_wind_nm'?: WindRadii;
   '64kt_wind_nm'?: WindRadii;
