@@ -102,19 +102,6 @@ export const getWindField = async (): Promise<GeoJSONFeature[] | undefined> => {
   }
 };
 
-export const getWindFieldForecast = async (): Promise<GeoJSONFeature[] | undefined> => {
-  try {
-    const response = await fetch('/api/wind-field-forecast', options);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data: GeoJSONResponse = await response.json();
-    return data.features;
-  } catch (err) {
-    console.error('Server error', err);
-  }
-};
-
 export const getAreasOfInterest = async (): Promise<GeoJSONFeature[] | undefined> => {
   try {
     const response = await fetch('/api/areas-of-interest', options);
