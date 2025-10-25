@@ -12,10 +12,10 @@ const SeasonIntensity = () => {
     if (!season) return;
     
     const minPressures = season.map((storm) => {
-      const pressures = storm.data.map((point) => {
-        return point.min_pressure_mb;
-      });
-      return Math.min(...pressures);
+      const pressures = storm.data
+        .map((point) => point.min_pressure_mb)
+        .filter((pressure): pressure is number => pressure !== undefined && pressure > 0);
+      return pressures.length > 0 ? Math.min(...pressures) : 0;
     });
     setMinPressures(minPressures);
   }, [season]);

@@ -99,7 +99,6 @@ const AceTike = () => {
       data: TIKEArray?.map((tike) => parseFloat(tike.toFixed(1))),
       borderColor: "orange",
       backgroundColor: "lightyellow",
-      fill: true,
       yAxisID: 'y1'
     });
   }

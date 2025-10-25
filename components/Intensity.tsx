@@ -21,7 +21,7 @@ const Intensity = () => {
 
     const pressure = data.map((point) => {
       let pressure = point.min_pressure_mb;
-      if (pressure > 0) {
+      if (pressure && pressure > 0) {
         return pressure;
       }
       return null;
