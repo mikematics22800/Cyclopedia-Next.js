@@ -1,36 +1,198 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌪️ Cyclopedia Next.js
 
-## Getting Started
+A comprehensive tropical cyclone tracking and visualization application built with Next.js 16, TypeScript, and Tailwind CSS. This application provides historical storm data analysis, live storm tracking, and interactive maps for both Atlantic and Pacific hurricane basins.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 📊 **Historical Storm Analysis**
+- **Complete Storm Database**: Access to Atlantic (1851-2024) and Pacific (1949-2024) storm data
+- **Storm Details**: Wind speeds, pressure, landfalls, casualties, and economic impact
+- **Energy Metrics**: Accumulated Cyclone Energy (ACE) and Track Integrated Kinetic Energy (TIKE)
+- **Visual Charts**: Interactive intensity, ACE/TIKE, and season comparison charts
+- **Storm Images**: Historical satellite imagery and storm photos
+
+### 🗺️ **Interactive Mapping**
+- **Leaflet Integration**: High-performance mapping with multiple tile layers
+- **Storm Tracks**: Visual representation of storm paths and intensity
+- **Wind Field Visualization**: 34kt, 50kt, and 64kt wind radius data (2004+)
+- **Live Weather Layers**: Real-time cloud, precipitation, wind, and pressure data
+- **Areas of Interest**: Current tropical weather outlooks and storm potential
+
+### 📱 **Responsive Design**
+- **Mobile-First**: Optimized for all screen sizes
+- **Progressive Web App**: Installable with offline capabilities
+- **Touch-Friendly**: Gesture support for mobile devices
+- **Adaptive UI**: Different layouts for desktop and mobile
+
+### 🔄 **Live Storm Tracking**
+- **Real-Time Data**: Current active storms and their status
+- **Forecast Cones**: NHC forecast tracks and uncertainty cones
+- **Movement Analysis**: Speed and direction calculations
+- **Advisory Integration**: Latest storm advisories and updates
+
+## 🛠️ Technology Stack
+
+### **Frontend**
+- **Next.js 16** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first styling
+- **React Leaflet** - Interactive maps
+- **Chart.js** - Data visualization
+- **Material-UI** - Component library
+
+### **Backend**
+- **Next.js API Routes** - Serverless API endpoints
+- **File System** - JSON-based data storage
+- **CORS** - Cross-origin resource sharing
+
+### **Data Sources**
+- **HURDAT2** - Historical hurricane database
+- **NHC** - National Hurricane Center live data
+- **NOAA** - Weather service APIs
+- **FEMA** - Real-time storm tracking
+
+## 📁 Project Structure
+
+```
+cyclopedia-next/
+├── app/
+│   ├── api/                          # API routes
+│   │   ├── archive/[basin]/[year]/   # Storm data endpoint
+│   │   └── health/                   # Health check
+│   ├── globals.css                   # Global styles
+│   ├── layout.tsx                    # Root layout
+│   └── page.tsx                      # Main page
+├── archive/                          # Storm data files
+│   ├── atl/                          # Atlantic storms (1851-2024)
+│   └── pac/                          # Pacific storms (1949-2024)
+├── components/                       # React components
+│   ├── Interface.tsx                 # Main interface
+│   ├── Map.tsx                       # Interactive map
+│   ├── StormArchive.tsx              # Storm details
+│   ├── SeasonArchive.tsx             # Season statistics
+│   ├── LiveTracker.tsx               # Live storm tracking
+│   └── ArchiveCharts.tsx             # Data visualization
+├── contexts/
+│   └── AppContext.tsx                # React context
+├── libs/                             # Utility libraries
+│   ├── hurdat.ts                     # Data fetching
+│   └── sum.ts                        # Math utilities
+├── public/                           # Static assets
+│   ├── cyclone.png                   # App icon
+│   ├── hurricane.jpg                 # Background image
+│   ├── retired.png                   # Retired storm badge
+│   └── storm.ttf                     # Custom font
+└── next.config.ts                    # Next.js configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Prerequisites**
+- Node.js 18+ 
+- npm or yarn
+- Modern web browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **Installation**
 
-## Learn More
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd cyclopedia-next
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
 
-## Deploy on Vercel
+### **Production Build**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Build for production
+npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start production server
+npm run start
+```
+
+## 📖 Usage Guide
+
+### **Historical Analysis**
+
+1. **Select Basin**: Choose Atlantic or Pacific
+2. **Pick Year**: Select from 1851-2024 (Atlantic) or 1949-2024 (Pacific)
+3. **Choose Storm**: Select specific storm from dropdown
+4. **View Details**: See storm statistics, track, and impact data
+5. **Analyze Charts**: Review intensity curves and energy metrics
+
+### **Live Tracking**
+
+1. **Toggle Mode**: Switch to "Live Tracker" mode
+2. **View Active Storms**: See currently active tropical systems
+3. **Weather Layers**: Enable/disable real-time weather data
+4. **Storm Details**: Click storms for detailed information
+
+### **Mobile Usage**
+
+1. **Touch Navigation**: Swipe and tap to navigate
+2. **Chart Expansion**: Tap charts to view full-screen
+3. **Map Interaction**: Pinch to zoom, drag to pan
+4. **Interface Toggle**: Use bottom interface panel
+
+## 🔧 API Endpoints
+
+```
+Returns API status and timestamp.
+
+### **Storm Data**
+```http
+GET /api/archive/{basin}/{year}
+```
+- `basin`: `atl` (Atlantic) or `pac` (Pacific)
+- `year`: 1851-2024 (Atlantic) or 1949-2024 (Pacific)
+
+**Example:**
+```bash
+curl http://localhost:3000/api/archive/atl/2023
+```
+
+## 🔍 Data Sources
+
+### **Historical Data**
+- **HURDAT2**: Atlantic and Pacific hurricane database
+- **NHC**: National Hurricane Center archives
+- **NOAA**: Historical storm track data
+
+### **Live Data**
+- **NHC Advisories**: Current storm information
+- **FEMA APIs**: Real-time storm tracking
+- **NOAA Weather**: Live weather layers
+
+### **Data Updates**
+- Historical data is static (updated annually)
+- Live data refreshes every 6 hours
+- Forecast data updates every 6 hours
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **National Hurricane Center** for storm data and forecasts
+- **NOAA** for historical hurricane databases
+- **FEMA** for real-time storm tracking APIs
+- **OpenStreetMap** for map tiles
+- **React Leaflet** for mapping components
+- **Chart.js** for data visualization
+
+**Built with ❤️ for hurricane tracking and research**
+
