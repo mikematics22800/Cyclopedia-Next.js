@@ -1,12 +1,27 @@
 {
   "name": "Cyclopedia",
   "short_name": "Cyclopedia",
-  "icons": [{
-    "src": "/cyclone.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
+  "description": "Live hurricane tracking and historical storm data",
   "start_url": "/",
-  "display": "fullscreen"
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/cyclone.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/cyclone.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["weather", "navigation"],
+  "screenshots": []
 }
   

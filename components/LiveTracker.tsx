@@ -317,42 +317,40 @@ const LiveTracker = () => {
         return (
           <div 
             key={stormId} 
-            className={`bg-gray-700 w-full max-w-80 cursor-pointer transition-all duration-200 rounded-lg hover:ring-2 hover:ring-white ${
-              isSelected ? 'ring-2 ring-white' : ''
-            }`}
+            className={`live-storm-card ${isSelected ? 'selected' : ''}`}
             style={{ borderLeft: `4px solid ${color}` }}
             onClick={() => selectLiveStorm(stormId)}
           >
             <ul className='storm-data'>
               {/* Storm Header */}
-              <li className='flex flex-col pb-2 border-b border-gray-600'>
-                <h1 className='text-lg font-bold' style={{color: color}}>
+              <li className='storm-header'>
+                <h1 className='storm-title' style={{color: color}}>
                   {status} {STORMNAME.split(' ').pop()}
                 </h1>     
               </li>
               
               {/* Wind Data */}
-              <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-                <h2 className='text-sm font-semibold'>Maximum Wind</h2>
-                <h2 className='text-lg font-bold'>{MAXWIND || 'Unavailable'} kt</h2>
+              <li className='storm-data-item'>
+                <h2 className='storm-label'>Maximum Wind</h2>
+                <h2 className='storm-value'>{MAXWIND || 'Unavailable'} kt</h2>
               </li>
               
               {/* Gust Data */}
-              <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-                <h2 className='text-sm font-semibold'>Maximum Wind Gusts</h2>
-                <h2 className='text-lg font-bold'>{GUST || 'Unavailable'} kt</h2>
+              <li className='storm-data-item'>
+                <h2 className='storm-label'>Maximum Wind Gusts</h2>
+                <h2 className='storm-value'>{GUST || 'Unavailable'} kt</h2>
               </li>
               
               {/* Pressure Data */}
-              <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-                <h2 className='text-sm font-semibold'>Minimum Pressure</h2>
-                <h2 className='text-lg font-bold'>{MSLP || 'Unavailable'} mb</h2>
+              <li className='storm-data-item'>
+                <h2 className='storm-label'>Minimum Pressure</h2>
+                <h2 className='storm-value'>{MSLP || 'Unavailable'} mb</h2>
               </li>
               
               {/* Movement Data */}
-              <li className='flex justify-between items-center p-2'>
-                <h2 className='text-sm font-semibold'>Movement</h2>
-                <h2 className='text-lg font-bold'>
+              <li className='storm-data-item last'>
+                <h2 className='storm-label'>Movement</h2>
+                <h2 className='storm-value'>
                   {movementSpeed !== null && movementDirection !== null 
                     ? `${movementDirection.cardinal} at ${Math.round(movementSpeed)} kt`
                     : 'Unavailable'

@@ -18,11 +18,13 @@ A comprehensive tropical cyclone tracking and visualization application built wi
 - **Live Weather Layers**: Real-time cloud, precipitation, wind, and pressure data
 - **Areas of Interest**: Current tropical weather outlooks and storm potential
 
-### 📱 **Responsive Design**
-- **Mobile-First**: Optimized for all screen sizes
-- **Progressive Web App**: Installable with offline capabilities
-- **Touch-Friendly**: Gesture support for mobile devices
-- **Adaptive UI**: Different layouts for desktop and mobile
+### 📱 **Progressive Web App (PWA)**
+- **Installable**: Add to home screen on all devices
+- **Offline Support**: Service worker caching for offline access
+- **Install Prompt**: Automatic prompt to install the app
+- **Theme Colors**: Branded appearance when installed
+- **Responsive Design**: Mobile-first approach with touch-friendly UI
+- **Standalone Mode**: Full-screen experience when installed
 
 ### 🔄 **Live Storm Tracking**
 - **Real-Time Data**: Current active storms and their status
@@ -39,6 +41,8 @@ A comprehensive tropical cyclone tracking and visualization application built wi
 - **React Leaflet** - Interactive maps
 - **Chart.js** - Data visualization
 - **Material-UI** - Component library
+- **Service Workers** - PWA offline support
+- **Workbox** - Service worker management
 
 ### **Backend**
 - **Next.js API Routes** - Serverless API endpoints
@@ -65,7 +69,13 @@ cyclopedia-next/
 ├── archive/                          # Storm data files
 │   ├── atl/                          # Atlantic storms (1851-2024)
 │   └── pac/                          # Pacific storms (1949-2024)
-├── components/                       # React components
+├── app/
+│   ├── components/                   # React components
+│   │   ├── ServiceWorkerRegister.tsx # PWA service worker
+│   │   └── InstallPrompt.tsx         # Install prompt
+│   ├── api/                          # API routes
+│   └── layout.tsx                    # Root layout with PWA metadata
+├── components/                       # Component library
 │   ├── Interface.tsx                 # Main interface
 │   ├── Map.tsx                       # Interactive map
 │   ├── StormArchive.tsx              # Storm details
@@ -76,12 +86,15 @@ cyclopedia-next/
 │   └── AppContext.tsx                # React context
 ├── libs/                             # Utility libraries
 │   ├── hurdat.ts                     # Data fetching
-│   └── sum.ts                        # Math utilities
+│   ├── sum.ts                        # Math utilities
+│   └── serviceWorker.ts              # Service worker utilities
 ├── public/                           # Static assets
 │   ├── cyclone.png                   # App icon
 │   ├── hurricane.jpg                 # Background image
 │   ├── retired.png                   # Retired storm badge
-│   └── storm.ttf                     # Custom font
+│   ├── storm.ttf                     # Custom font
+│   ├── manifest.json                 # PWA manifest
+│   └── sw.js                         # Service worker
 └── next.config.ts                    # Next.js configuration
 ```
 
@@ -148,6 +161,14 @@ npm run start
 2. **Chart Expansion**: Tap charts to view full-screen
 3. **Map Interaction**: Pinch to zoom, drag to pan
 4. **Interface Toggle**: Use bottom interface panel
+
+### **PWA Installation**
+
+1. **Desktop**: Click the install prompt or browser menu
+2. **Mobile**: Follow the install prompt in browser
+3. **Standalone Mode**: App opens in fullscreen when installed
+4. **Offline Access**: Cached content available without internet
+5. **Updates**: Automatic service worker updates in background
 
 ## 🔧 API Endpoints
 

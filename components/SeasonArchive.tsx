@@ -73,47 +73,47 @@ const SeasonArchive = () => {
       <div className='w-full flex flex-col items-center'>
         <ul className='season-data bg-gray-800'>
           {/* Season Header */}
-          <li className='flex flex-col border-b border-gray-600 p-2'>
-            <h1 className='text-lg font-bold'>Season Totals</h1>     
+          <li className='storm-header'>
+            <h1 className='storm-title'>Season Totals</h1>     
           </li>
           
           {/* Storm Counts */}
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Tropical Cyclones</h2>
-            <h2 className='text-lg font-bold'>{season.length}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Tropical Cyclones</h2>
+            <h2 className='storm-value'>{season.length}</h2>
           </li>
           
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Hurricanes</h2>
-            <h2 className='text-lg font-bold'>{hurricanes}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Hurricanes</h2>
+            <h2 className='storm-value'>{hurricanes}</h2>
           </li>
           
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Major Hurricanes</h2>
-            <h2 className='text-lg font-bold'>{majorHurricanes}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Major Hurricanes</h2>
+            <h2 className='storm-value'>{majorHurricanes}</h2>
           </li>
           
           {/* Impact Metrics */}
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Dead/Missing</h2>
-            <h2 className='text-lg font-bold'>{deadOrMissing}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Dead/Missing</h2>
+            <h2 className='storm-value'>{deadOrMissing}</h2>
           </li>
           
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Cost (Million USD)</h2>
-            <h2 className='text-lg font-bold text-green-400'>${cost}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Cost (Million USD)</h2>
+            <h2 className='storm-value cost-value'>${cost}</h2>
           </li>
 
           {/* Energy Metrics */}
-          <li className='flex justify-between p-2 border-b border-gray-600'>
-            <h2 className='text-sm font-semibold '>Accumulated Cyclone Energy</h2>
-            <h2 className='text-lg font-bold'>{sum(seasonACE).toFixed(1)}</h2>
+          <li className='storm-data-item'>
+            <h2 className='storm-label'>Accumulated Cyclone Energy</h2>
+            <h2 className='storm-value'>{sum(seasonACE).toFixed(1)}</h2>
           </li>
           
           {year >= 2004 && (
-            <li className='flex justify-between p-2'>
-              <h2 className='text-sm font-semibold '>Track Integrated Kinetic Energy</h2>
-              <h2 className='text-lg font-bold'>{seasonTIKE.toFixed(1)} TJ</h2>
+            <li className='storm-data-item last'>
+              <h2 className='storm-label'>Track Integrated Kinetic Energy</h2>
+              <h2 className='storm-value'>{seasonTIKE.toFixed(1)} TJ</h2>
             </li>
           )}
         </ul>

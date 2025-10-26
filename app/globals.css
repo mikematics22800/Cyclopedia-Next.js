@@ -140,3 +140,96 @@ nav {
 ul li h2 {
   @apply text-sm
 }
+
+/* Interface */
+.drag-handle {
+  @apply bg-gray-300 rounded-full w-20 h-1 md:hidden
+}
+
+.storm-image-container {
+  @apply w-full flex flex-col items-center
+}
+
+.storm-image-link {
+  @apply relative w-full aspect-square bg-cover bg-center flex flex-col items-center justify-center bg-gray-400 rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300
+}
+
+.storm-image-link.retired {
+  @apply !justify-end pb-2 lg:pb-4 px-8
+}
+
+.storm-image-loading {
+  @apply absolute inset-0 flex flex-col gap-4 items-center justify-center min-h-[200px] rounded-3xl w-full h-full z-10
+}
+
+.storm-image-unavailable {
+  @apply flex flex-col gap-4 items-center rounded-3xl w-full h-full justify-center
+}
+
+.storm-header {
+  @apply flex flex-col pb-2 border-b border-gray-600
+}
+
+.storm-data-item {
+  @apply flex justify-between items-center p-2 border-b border-gray-600
+}
+
+.storm-data-item.last {
+  @apply border-b-0
+}
+
+.storm-title {
+  @apply text-lg font-bold
+}
+
+.storm-value {
+  @apply text-lg font-bold
+}
+
+.storm-label {
+  @apply text-sm font-semibold
+}
+
+.map-loader {
+  @apply absolute inset-0 flex flex-col gap-4 items-center justify-center min-h-[400px] w-full h-full z-[10000] bg-black bg-opacity-50 backdrop-blur-sm
+}
+
+.map-loader-icon {
+  @apply animate-spin h-16 w-16
+}
+
+.map-loader-text {
+  @apply text-xl font-semibold text-white
+}
+
+.map-controls-container {
+  @apply absolute top-4 right-4 z-[9999] flex flex-row gap-4 items-start
+}
+
+.live-storm-card {
+  @apply bg-gray-700 w-full max-w-80 cursor-pointer transition-all duration-200 rounded-lg hover:ring-2 hover:ring-white
+}
+
+.live-storm-card.selected {
+  @apply ring-2 ring-white
+}
+
+.retired-badge {
+  @apply w-full
+}
+
+.cyclone-icon {
+  @apply !text-8xl
+}
+
+.unavailable-text {
+  @apply text-xl font-semibold
+}
+
+.cost-value {
+  @apply text-green-400
+}
+
+.app-background {
+  background-image: url('/hurricane.jpg');
+}

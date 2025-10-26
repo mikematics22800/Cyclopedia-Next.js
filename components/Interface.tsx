@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import StormArchive from "./StormArchive";
 import SeasonArchive from "./SeasonArchive";
-// Removed MUI imports - using native HTML elements
 import Charts from "./ArchiveCharts";
 import LiveTracker from "./LiveTracker";
+import { MenuItem, Select, Checkbox } from "@mui/material"
 
 const Interface = () => {
   const { 
@@ -20,13 +20,15 @@ const Interface = () => {
     season, 
     tracker, 
     toggleCharts, 
-    map 
+    map,
+    selectArchivedStormPoint
   } = useAppContext();
 
   const startYear = basin === 'atl' ? 1850 : 1948;
   const years = new Array(2024 - startYear).fill(0);
 
   const [stormIds, setStormIds] = useState<string[] | null>(null);
+  const lastFocusedStormRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (season) {
@@ -34,35 +36,48 @@ const Interface = () => {
         return storm.id;
       });
       setStormIds(stormIds);
+      lastFocusedStormRef.current = null; // Reset when season changes
     }
   }, [season]);
 
+  // Focus on the selected storm
+  useEffect(() => {
+    if (season && stormId && !tracker && lastFocusedStormRef.current !== stormId) {
+      const selectedStorm = season.find((storm) => storm.id === stormId);
+      if (selectedStorm && selectedStorm.data && selectedStorm.data.length > 0) {
+        const firstPoint = selectedStorm.data[0];
+        selectArchivedStormPoint(stormId, firstPoint.lat, firstPoint.lng);
+        lastFocusedStormRef.current = stormId;
+      }
+    }
+  }, [stormId, season, tracker, selectArchivedStormPoint]);
+
   return (
     <div className='interface'>
-      <div className="bg-gray-300 rounded-full w-20 h-1 md:hidden"/>
+      <div className="drag-handle"/>
       {!tracker && (
         <>
           <div className="selectors">
-            <select className="select" value={basin} onChange={(e) => {setBasin(e.target.value)}}>
-              <option value="atl">Atlantic</option>
-              <option value="pac">Pacific</option>
-            </select>
-            <select className="select" value={year} onChange={(e) => {setYear(Number(e.target.value))}}>
+            <Select className="select" value={basin} onChange={(e) => {setBasin(e.target.value)}}>
+              <MenuItem value="atl"><p className="text-black font-bold">Atlantic</p></MenuItem>
+              <MenuItem value="pac"><p className="text-black font-bold">Pacific</p></MenuItem>
+            </Select>
+            <Select className="select" value={year} onChange={(e) => {setYear(Number(e.target.value))}}>
               {years.map((_, index) => {
                 const selectedYear = 2024 - index;
-                return (<option key={index} value={selectedYear}>{selectedYear}</option>);
+                return (<MenuItem key={index} value={selectedYear}><p className="text-black font-bold">{selectedYear}</p></MenuItem>);
               })}
-            </select>
-            <select className="select" value={stormId} onChange={(e) => {setStormId(e.target.value)}}>
+            </Select>
+            <Select className="select" value={stormId} onChange={(e) => {setStormId(e.target.value)}}>
               {stormIds?.map((id) => {
-                const name = id.split('_')[1];
-                return (<option key={id} value={id}>{name}</option>);
+                const name = id.split('_')[1]
+                return (<MenuItem key={id} value={id}><p className="text-black font-bold">{name}</p></MenuItem>);
               })}
-            </select>
+            </Select>
           </div>
           {year >= 2004 && (
             <div className="flex items-center gap-1">
-              <input type="checkbox" className="!text-white !p-0" onChange={(e) => {setWindField(e.target.checked)}}/>
+              <Checkbox className="!text-white !p-0" onChange={(e) => {setWindField(e.target.checked)}}/>
               <h1 className="text-white font-bold">Wind Field</h1>
             </div>
           )}

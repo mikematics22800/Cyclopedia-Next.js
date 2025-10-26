@@ -273,7 +273,58 @@ export default function Home() {
 
   const selectLiveStorm = (stormId: string) => {
     setSelectedLiveStorm(stormId);
-    setClickedPoint(null); // Clear clicked point so map focuses on selected storm
+    
+    // Find the current position of the selected storm and focus on it
+    if (liveHurdat && liveHurdat.length > 0) {
+      const stormPoints = liveHurdat.filter((feature: any) => feature.properties.STORM_ID === stormId);
+      
+      if (stormPoints && stormPoints.length > 0) {
+        // Group by advisory number to find the latest position
+        const advisories: any = {};
+        stormPoints.forEach((point: any) => {
+          const advisoryNum = parseInt(point.properties.ADVISNUM);
+          if (!advisories[advisoryNum]) {
+            advisories[advisoryNum] = [];
+          }
+          advisories[advisoryNum].push(point);
+        });
+        
+        // Find the latest advisory
+        const latestAdvisoryNum = Math.max(...Object.keys(advisories).map(Number));
+        const latestAdvisoryPoints = advisories[latestAdvisoryNum];
+        
+        if (latestAdvisoryPoints && latestAdvisoryPoints.length > 0) {
+          // Parse dates to sort by time
+          const parseDate = (dateStr: string) => {
+            try {
+              const parts = dateStr.split(" ");
+              if (parts.length !== 7) return new Date(0);
+              const [time, ampm, timezone, dayOfWeek, month, date, year] = parts;
+              const hours = time.slice(0, -2);
+              const minutes = time.slice(-2);
+              let hour24 = parseInt(hours);
+              if (ampm === "PM" && hour24 !== 12) hour24 += 12;
+              else if (ampm === "AM" && hour24 === 12) hour24 = 0;
+              return new Date(`${month} ${date} ${year} ${hour24}:${minutes}:00`);
+            } catch {
+              return new Date(0);
+            }
+          };
+          
+          // Sort points by date to get the most current
+          latestAdvisoryPoints.sort((a: any, b: any) => {
+            const dateA = parseDate(a.properties.ADVDATE);
+            const dateB = parseDate(b.properties.ADVDATE);
+            return dateB.getTime() - dateA.getTime();
+          });
+          
+          // Get the most recent point
+          const currentPoint = latestAdvisoryPoints[0];
+          const [lng, lat] = currentPoint.geometry.coordinates[0];
+          setClickedPoint({ lat, lng });
+        }
+      }
+    }
   };
 
   const selectArchivedStormPoint = (stormId: string, lat: number, lng: number) => {
@@ -327,7 +378,7 @@ export default function Home() {
 
   return (
     <AppProvider value={value}>
-      <div className="app" style={{backgroundImage: `url('/hurricane.jpg')`}}>
+      <div className="app app-background">
         {season && storm ? (
           <>
             <nav>

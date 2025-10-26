@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -33,14 +33,33 @@ const Map = () => {
     temp: false
   });
 
+  const [mapInitializing, setMapInitializing] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Set initializing to false after a short delay to allow map to load
+    const timer = setTimeout(() => {
+      setMapInitializing(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleLayerChange = (layers: WeatherLayers) => {
     setWeatherLayers(layers);
   };
 
   return (
-    <div className="map">
+    <div className="map relative">
+      {/* Map Initializing Loader */}
+      {mapInitializing && (
+        <div className='map-loader'>
+          <img src="/cyclone.png" alt="Loading" className="map-loader-icon" />
+          <h1 className='map-loader-text'>Map Initializing</h1>
+        </div>
+      )}
+
       {/* Legend and Weather Controls */}
-      <div className="absolute top-4 right-4 z-[9999] flex flex-row gap-4 items-start">
+      <div className="map-controls-container">
         {tracker && <ClimateLayers onLayerChange={handleLayerChange} />}
         <Legend />
       </div>

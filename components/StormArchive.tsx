@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-// Using public folder images directly
+import CycloneIcon from '@mui/icons-material/Cyclone';
 
 const StormArchive = () => {
   const { year, storm, stormId, ACE, TIKE } = useAppContext();
@@ -138,10 +138,10 @@ const StormArchive = () => {
     <div className='storm'>
       <div className='flex flex-col gap-6 w-full items-center'>
         {/* Storm Image Section */}
-        <div className='w-full flex flex-col items-center'>
+        <div className='storm-image-container'>
           <a 
             target='_blank' 
-            className={`${retired && '!justify-end pb-2 lg:pb-4 px-8'} ${year < 1995 && 'pointer-events-none'} w-full aspect-square bg-cover bg-center flex flex-col items-center justify-center  bg-gray-800 rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300`}
+            className={`storm-image-link ${retired ? 'retired' : ''} ${year < 1995 ? '!pointer-events-none' : ''}`}
             style={{backgroundImage: `url(${image})`}} 
             href={`https://www.nhc.noaa.gov/data/tcr/${stormId}.pdf`}
           >
@@ -158,30 +158,30 @@ const StormArchive = () => {
             
             {/* Loading State */}
             {imageLoading && image !== "" && (
-              <div className='flex flex-col gap-4 items-center justify-center min-h-[200px] rounded-3xl w-full h-full'>
-                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-white'></div>
-                <h1 className='text-xl font-semibold '>Loading...</h1>
+              <div className='storm-image-loading'>
+                <img src="/cyclone.png" alt="Loading" className="animate-spin h-12 w-12" />
+                <h1 className='unavailable-text'>Loading...</h1>
               </div>
             )}
             
             {/* No Image State */}
             {image == "" && (
-              <div className='flex flex-col gap-4 items-center rounded-3xl w-full h-full justify-center'>
-                <div className='text-8xl'>🌪️</div>
-                <h1 className='text-xl font-semibold '>Image Unavailable</h1>
+              <div className='storm-image-unavailable'>
+                <CycloneIcon className='cyclone-icon'/>
+                <h1 className='unavailable-text'>Image Unavailable</h1>
               </div>
             )}
             
             {/* Retired Badge */}
-            {retired && <img className='w-full' src="/retired.png"/>}
+            {retired && <img className='retired-badge' src="/retired.png"/>}
           </a>
         </div>
 
         {/* Storm Data Section */}
           <ul className='storm-data bg-gray-800 w-full'>
             {/* Storm Header */}
-            <li className='flex flex-col pb-2 border-b border-gray-600'>
-              <h1 className='text-lg font-bold' style={{color:textColor}}>
+            <li className='storm-header'>
+              <h1 className='storm-title' style={{color:textColor}}>
                 {stormName}
               </h1>     
               <h1 className='text-sm font-bold'>
@@ -190,58 +190,58 @@ const StormArchive = () => {
             </li>
             
             {/* Wind Data */}
-            <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-              <h2 className='text-sm font-semibold '>Maximum Wind</h2>
-              <h2 className='text-lg font-bold '>{maxWind} kt</h2>
+            <li className='storm-data-item'>
+              <h2 className='storm-label'>Maximum Wind</h2>
+              <h2 className='storm-value'>{maxWind} kt</h2>
             </li>
             
             {landfalls.length > 0 && (
-              <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-                <h2 className='text-sm font-semibold '>Maximum Inland Wind</h2>
-                <h2 className='text-lg font-bold '>{inlandMaxWind} kt</h2>
+              <li className='storm-data-item'>
+                <h2 className='storm-label'>Maximum Inland Wind</h2>
+                <h2 className='storm-value'>{inlandMaxWind} kt</h2>
               </li>
             )}
             
             {/* Pressure Data */}
-            <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-              <h2 className='text-sm font-semibold '>Minimum Pressure</h2>
-              <h2 className='text-lg font-bold '>
+            <li className='storm-data-item'>
+              <h2 className='storm-label'>Minimum Pressure</h2>
+              <h2 className='storm-value'>
                 {minPressure != "9999" && minPressure != "-999" ? `${minPressure} mb` : 'Unknown'}
               </h2>
             </li>
             
             {landfalls.length > 0 && (
-              <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-                <h2 className='text-sm font-semibold '>Minimum Inland Pressure</h2>
-                <h2 className='text-lg font-bold '>
+              <li className='storm-data-item'>
+                <h2 className='storm-label'>Minimum Inland Pressure</h2>
+                <h2 className='storm-value'>
                   {inlandMinPressure != "9999" && inlandMinPressure != "-999" ? `${inlandMinPressure} mb` : 'Unknown'}
                 </h2>
               </li>
             )}
             
             {/* Impact Data */}
-            <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-              <h2 className='text-sm font-semibold '>Dead/Missing</h2>
-              <h2 className='text-lg font-bold '>{deadOrMissing}</h2>
+            <li className='storm-data-item'>
+              <h2 className='storm-label'>Dead/Missing</h2>
+              <h2 className='storm-value'>{deadOrMissing}</h2>
             </li>
             
             {/* Cost Data */}
-            <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-              <h2 className='text-sm font-semibold '>Cost (Million USD)</h2>
-              <h2 className='text-lg font-bold text-green-400'>${cost}</h2>
+            <li className='storm-data-item'>
+              <h2 className='storm-label'>Cost (Million USD)</h2>
+              <h2 className='storm-value cost-value'>${cost}</h2>
             </li>
 
                      
             {/* Energy Data */}
-            <li className='flex justify-between items-center p-2 border-b border-gray-600'>
-              <h2 className='text-sm font-semibold '>Accumulated Cyclone Energy</h2>
-              <h2 className='text-lg font-bold '>{ACE.toFixed(1)}</h2>
+            <li className='storm-data-item'>
+              <h2 className='storm-label'>Accumulated Cyclone Energy</h2>
+              <h2 className='storm-value'>{ACE.toFixed(1)}</h2>
             </li>
             
             {year >= 2004 && (
-              <li className='flex justify-between items-center p-2'>
-                <h2 className='text-sm font-semibold '>Track Integrated Kinetic Energy</h2>
-                <h2 className='text-lg font-bold '>{TIKE.toFixed(1)} TJ</h2>
+              <li className='storm-data-item last'>
+                <h2 className='storm-label'>Track Integrated Kinetic Energy</h2>
+                <h2 className='storm-value'>{TIKE.toFixed(1)} TJ</h2>
               </li>
             )}
           </ul>
