@@ -194,5 +194,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **React Leaflet** for mapping components
 - **Chart.js** for data visualization
 
-**Built with ❤️ for hurricane tracking and research**
+**Built with love for hurricane tracking and research**
 
