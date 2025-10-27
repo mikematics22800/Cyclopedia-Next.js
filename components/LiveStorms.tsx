@@ -447,9 +447,9 @@ const LiveStorms = () => {
         <Polyline 
           key={`polyline-${stormId}-${isSelected}`}
           positions={data.positions} 
-          color="white"
-          opacity={1.0}
-          weight={3}
+          color={isSelected ? "white" : "gray"}
+          opacity={isSelected ? 1 : .5}
+          weight={isSelected ? 4 : 2}
         />
         {data.markers}
       </div>
