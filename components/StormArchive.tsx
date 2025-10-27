@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import CycloneIcon from '@mui/icons-material/Cyclone';
 
 const StormArchive = () => {
   const { year, storm, stormId, ACE, TIKE } = useAppContext();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const [stormName, setStormName] = useState<string>('');
   const [textColor, setTextColor] = useState<string>('');
@@ -25,9 +26,23 @@ const StormArchive = () => {
     if (!storm) return;
 
     setStormName(storm.id.split('_')[1]);
-    setImage(storm.image || '');
-    setImageLoading(true);
+    const newImage = storm.image || '';
+    setImage(newImage);
+    // Only set loading to true if there's actually an image to load
+    setImageLoading(newImage !== '');
     setRetired(storm.retired || false);
+
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Safety timeout: hide spinner after 5 seconds if image hasn't loaded
+    if (newImage !== '') {
+      timeoutRef.current = setTimeout(() => {
+        setImageLoading(false);
+      }, 5000);
+    }
 
     const data = storm.data;
 
@@ -78,8 +93,6 @@ const StormArchive = () => {
     });
     setInlandMinPressure(Math.min(...inlandPressures).toString());
 
-    setImage(storm.image || '');
-
     const cost = ((storm.cost_usd || 0)/1000000).toFixed(1);
     setCost(cost);
 
@@ -122,13 +135,24 @@ const StormArchive = () => {
       }
     }
     setTextColor(textColor);
+
+    // Cleanup function to clear timeout
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [storm]);
 
   const handleImageLoad = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setImageLoading(false);
   };
 
   const handleImageError = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setImageLoading(false);
   };
 
