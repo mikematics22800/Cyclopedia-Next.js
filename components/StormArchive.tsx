@@ -160,7 +160,6 @@ const StormArchive = () => {
             {imageLoading && image !== "" && (
               <div className='storm-image-loading'>
                 <img src="/cyclone.png" alt="Loading" className="animate-spin h-12 w-12" />
-                <h1 className='unavailable-text'>Loading...</h1>
               </div>
             )}
             

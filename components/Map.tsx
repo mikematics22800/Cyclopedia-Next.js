@@ -54,7 +54,6 @@ const Map = () => {
       {mapInitializing && (
         <div className='map-loader'>
           <img src="/cyclone.png" alt="Loading" className="map-loader-icon" />
-          <h1 className='map-loader-text'>Loading...</h1>
         </div>
       )}
 
