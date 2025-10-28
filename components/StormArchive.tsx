@@ -142,20 +142,6 @@ const StormArchive = () => {
     };
   }, [storm]);
 
-  const handleImageLoad = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setImageLoading(false);
-  };
-
-  const handleImageError = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setImageLoading(false);
-  };
-
   if (!storm) return null;
 
   return (
@@ -174,19 +160,9 @@ const StormArchive = () => {
               <img 
                 src={image} 
                 style={{display: 'none'}}
-                onLoad={handleImageLoad}
-                onError={handleImageError}
                 alt=""
               />
             )}
-            
-            {/* Loading State */}
-            {imageLoading && image !== "" && (
-              <div className='storm-image-loading'>
-                <img src="/cyclone.png" alt="Loading" className="animate-spin h-12 w-12" />
-              </div>
-            )}
-            
             {/* No Image State */}
             {image == "" && (
               <div className='storm-image-unavailable'>
