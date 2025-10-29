@@ -152,7 +152,7 @@ ul li h2 {
 }
 
 .header {
-  @apply flex flex-col pb-2 border-b border-gray-600 gap-1
+  @apply flex flex-col pb-2 border-b border-gray-600 
 }
 
 .data-row {
