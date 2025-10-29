@@ -71,49 +71,49 @@ const SeasonArchive = () => {
   return (
     <div className='season'>
       <div className='w-full flex flex-col items-center'>
-        <ul className='season-data bg-gray-800'>
+        <ul className='data-table bg-gray-800'>
           {/* Season Header */}
-          <li className='storm-header'>
-            <h1 className='storm-title'>Season Totals</h1>     
+          <li className='header'>
+            <h1 className='title'>Season Metrics</h1>     
           </li>
           
           {/* Storm Counts */}
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Tropical Cyclones</h2>
-            <h2 className='storm-value'>{season.length}</h2>
+          <li className='data-row border-b'>
+            <h2 className='label'>Tropical Cyclones</h2>
+            <h2 className='value'>{season.length}</h2>
           </li>
           
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Hurricanes</h2>
-            <h2 className='storm-value'>{hurricanes}</h2>
+          <li className='data-row border-b'>
+            <h2 className='label'>Hurricanes</h2>
+            <h2 className='value'>{hurricanes}</h2>
           </li>
           
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Major Hurricanes</h2>
-            <h2 className='storm-value'>{majorHurricanes}</h2>
+          <li className='data-row border-b'>
+            <h2 className='label'>Major Hurricanes</h2>
+            <h2 className='value'>{majorHurricanes}</h2>
           </li>
           
           {/* Impact Metrics */}
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Dead/Missing</h2>
-            <h2 className='storm-value'>{deadOrMissing}</h2>
+          <li className='data-row border-b'>
+            <h2 className='label'>Dead/Missing</h2>
+            <h2 className='value'>{deadOrMissing}</h2>
           </li>
           
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Cost (Million USD)</h2>
-            <h2 className='storm-value cost-value'>${cost}</h2>
+          <li className='data-row border-b'>
+            <h2 className='label'>Cost (Million USD)</h2>
+            <h2 className='value cost-value'>${cost}</h2>
           </li>
 
           {/* Energy Metrics */}
-          <li className='storm-data-item'>
-            <h2 className='storm-label'>Accumulated Cyclone Energy</h2>
-            <h2 className='storm-value'>{sum(seasonACE).toFixed(1)}</h2>
+          <li className={year >= 2004 ? 'data-row border-b' : 'data-row'}>
+            <h2 className='label'>Accumulated Cyclone Energy</h2>
+            <h2 className='value'>{sum(seasonACE).toFixed(1)}</h2>
           </li>
           
           {year >= 2004 && (
-            <li className='storm-data-item last'>
-              <h2 className='storm-label'>Track Integrated Kinetic Energy</h2>
-              <h2 className='storm-value'>{seasonTIKE.toFixed(1)} TJ</h2>
+            <li className='data-row'>
+              <h2 className='label'>Track Integrated Kinetic Energy</h2>
+              <h2 className='value'>{seasonTIKE.toFixed(1)} TJ</h2>
             </li>
           )}
         </ul>

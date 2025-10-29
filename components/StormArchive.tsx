@@ -146,101 +146,94 @@ const StormArchive = () => {
 
   return (
     <div className='storm'>
-      <div className='flex flex-col gap-6 w-full items-center'>
-        {/* Storm Image Section */}
-        <div className='storm-image-container'>
-          <a 
-            target='_blank' 
-            className={`storm-image-link ${retired ? 'retired' : ''} ${year < 1995 ? '!pointer-events-none' : ''}`}
-            style={{backgroundImage: `url(${image})`}} 
-            href={`https://www.nhc.noaa.gov/data/tcr/${stormId}.pdf`}
-          >
-            {/* Hidden img element to track loading */}
-            {image !== "" && (
-              <img 
-                src={image} 
-                style={{display: 'none'}}
-                alt=""
-              />
-            )}
-            {/* No Image State */}
-            {image == "" && (
-              <div className='storm-image-unavailable'>
-                <CycloneIcon className='cyclone-icon'/>
-                <h1 className='unavailable-text'>Image Unavailable</h1>
-              </div>
-            )}
-            
-            {/* Retired Badge */}
-            {retired && <img className='retired-badge' src="/retired.png"/>}
-          </a>
-        </div>
-
+      <div className='flex flex-col gap-5 w-full items-center'>
         {/* Storm Data Section */}
-          <ul className='storm-data bg-gray-800 w-full'>
+          <ul className='data-table'>
             {/* Storm Header */}
-            <li className='storm-header'>
-              <h1 className='storm-title' style={{color:textColor}}>
+            <li className='header mt-5'>
+              {/* Storm Image Section */}
+              <a 
+                target='_blank' 
+                className={`storm-image ${retired ? 'retired' : ''} ${year < 1995 ? '!pointer-events-none' : ''}`}
+                style={{backgroundImage: `url(${image})`}} 
+                href={`https://www.nhc.noaa.gov/data/tcr/${stormId}.pdf`}
+              >
+                {/* Hidden img element to track loading */}
+                {image !== "" && (
+                  <img 
+                    src={image} 
+                    style={{display: 'none'}}
+                    alt=""
+                  />
+                )}
+                {/* No Image State */}
+                {image == "" && (
+                  <div className='unavailable'>
+                    <CycloneIcon className='cyclone-icon'/>
+                    <h1 className='text-lg font-semibold text-gray-600'>Image Unavailable</h1>
+                  </div>
+                )}
+                
+                {/* Retired Badge */}
+                {retired && <img className='retired-badge' src="/retired.png"/>}
+              </a>
+              <h1 className='title' style={{color:textColor}}>
                 {stormName}
               </h1>     
               <h1 className='text-sm font-bold'>
                 {duration}
               </h1>     
             </li>
-            
             {/* Wind Data */}
-            <li className='storm-data-item'>
-              <h2 className='storm-label'>Maximum Wind</h2>
-              <h2 className='storm-value'>{maxWind} kt</h2>
+            <li className='data-row border-b'>
+              <h2 className='label'>Maximum Wind</h2>
+              <h2 className='value'>{maxWind} kt</h2>
             </li>
             
             {landfalls.length > 0 && (
-              <li className='storm-data-item'>
-                <h2 className='storm-label'>Maximum Inland Wind</h2>
-                <h2 className='storm-value'>{inlandMaxWind} kt</h2>
+              <li className='data-row border-b'>
+                <h2 className='label'>Maximum Inland Wind</h2>
+                <h2 className='value'>{inlandMaxWind} kt</h2>
               </li>
             )}
             
             {/* Pressure Data */}
-            <li className='storm-data-item'>
-              <h2 className='storm-label'>Minimum Pressure</h2>
-              <h2 className='storm-value'>
+            <li className='data-row border-b'>
+              <h2 className='label'>Minimum Pressure</h2>
+              <h2 className='value'>
                 {minPressure != "9999" && minPressure != "-999" ? `${minPressure} mb` : 'Unknown'}
               </h2>
             </li>
             
             {landfalls.length > 0 && (
-              <li className='storm-data-item'>
-                <h2 className='storm-label'>Minimum Inland Pressure</h2>
-                <h2 className='storm-value'>
+            <li className='data-row border-b'>
+                <h2 className='label'>Minimum Inland Pressure</h2>
+                <h2 className='value'>
                   {inlandMinPressure != "9999" && inlandMinPressure != "-999" ? `${inlandMinPressure} mb` : 'Unknown'}
                 </h2>
               </li>
             )}
             
             {/* Impact Data */}
-            <li className='storm-data-item'>
-              <h2 className='storm-label'>Dead/Missing</h2>
-              <h2 className='storm-value'>{deadOrMissing}</h2>
+            <li className='data-row border-b'>
+              <h2 className='label'>Dead/Missing</h2>
+              <h2 className='value'>{deadOrMissing}</h2>
             </li>
             
             {/* Cost Data */}
-            <li className='storm-data-item'>
-              <h2 className='storm-label'>Cost (Million USD)</h2>
-              <h2 className='storm-value cost-value'>${cost}</h2>
+            <li className='data-row border-b'>
+              <h2 className='label'>Cost (Million USD)</h2>
+              <h2 className='value cost-value'>${cost}</h2>
             </li>
-
-                     
             {/* Energy Data */}
-            <li className='storm-data-item'>
-              <h2 className='storm-label'>Accumulated Cyclone Energy</h2>
-              <h2 className='storm-value'>{ACE.toFixed(1)}</h2>
+            <li className={year >= 2004 ? 'data-row border-b' : 'data-row'}>
+              <h2 className='label'>Accumulated Cyclone Energy</h2>
+              <h2 className='value'>{ACE.toFixed(1)}</h2>
             </li>
-            
             {year >= 2004 && (
-              <li className='storm-data-item last'>
-                <h2 className='storm-label'>Track Integrated Kinetic Energy</h2>
-                <h2 className='storm-value'>{TIKE.toFixed(1)} TJ</h2>
+              <li className='data-row'>
+                <h2 className='label'>Track Integrated Kinetic Energy</h2>
+                <h2 className='value'>{TIKE.toFixed(1)} TJ</h2>
               </li>
             )}
           </ul>

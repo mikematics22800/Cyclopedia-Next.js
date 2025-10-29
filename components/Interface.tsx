@@ -79,8 +79,8 @@ const Interface = () => {
               <h1 className="text-white font-bold">Wind Field</h1>
             </div>
           )}
-          <StormArchive/>
           <SeasonArchive/>
+          <StormArchive/>
         </>
       )}
       {tracker && <LiveTracker />}
