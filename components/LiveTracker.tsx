@@ -299,7 +299,7 @@ const LiveTracker = () => {
   });
 
   return (
-    <div className="flex flex-col gap-4 w-full items-center">
+    <div className="flex flex-col gap-4 w-full data-rows-center">
       {Object.entries(stormGroups).map(([stormId, points]) => {
         const currentPosition = findCurrentPosition(points);
         
@@ -321,36 +321,36 @@ const LiveTracker = () => {
             style={{ borderLeft: `4px solid ${color}` }}
             onClick={() => selectLiveStorm(stormId)}
           >
-            <ul className='storm-data'>
+            <ul className='data-table'>
               {/* Storm Header */}
-              <li className='storm-header'>
-                <h1 className='storm-title' style={{color: color}}>
+              <li className='header'>
+                <h1 className='title' style={{color: color}}>
                   {status} {STORMNAME.split(' ').pop()}
                 </h1>     
               </li>
               
               {/* Wind Data */}
-              <li className='storm-data-item'>
-                <h2 className='storm-label'>Maximum Wind</h2>
-                <h2 className='storm-value'>{MAXWIND || 'Unavailable'} kt</h2>
+              <li className='data-row border-b'>
+                <h2 className='label'>Maximum Wind</h2>
+                <h2 className='value'>{MAXWIND || 'Unavailable'} kt</h2>
               </li>
               
               {/* Gust Data */}
-              <li className='storm-data-item'>
-                <h2 className='storm-label'>Maximum Wind Gusts</h2>
-                <h2 className='storm-value'>{GUST || 'Unavailable'} kt</h2>
+              <li className='data-row border-b'>
+                <h2 className='label'>Maximum Wind Gusts</h2>
+                <h2 className='value'>{GUST || 'Unavailable'} kt</h2>
               </li>
               
               {/* Pressure Data */}
-              <li className='storm-data-item'>
-                <h2 className='storm-label'>Minimum Pressure</h2>
-                <h2 className='storm-value'>{MSLP || 'Unavailable'} mb</h2>
+              <li className='data-row border-b'>
+                <h2 className='label'>Minimum Pressure</h2>
+                <h2 className='value'>{MSLP || 'Unavailable'} mb</h2>
               </li>
               
               {/* Movement Data */}
-              <li className='storm-data-item last'>
-                <h2 className='storm-label'>Movement</h2>
-                <h2 className='storm-value'>
+              <li className='data-row'>
+                <h2 className='label'>Movement</h2>
+                <h2 className='value'>
                   {movementSpeed !== null && movementDirection !== null 
                     ? `${movementDirection.cardinal} at ${Math.round(movementSpeed)} kt`
                     : 'Unavailable'
