@@ -19,8 +19,6 @@ const Interface = () => {
     setWindField, 
     season, 
     tracker, 
-    toggleCharts, 
-    map,
     selectArchivedStormPoint
   } = useAppContext();
 
@@ -83,20 +81,13 @@ const Interface = () => {
           )}
           <StormArchive/>
           <SeasonArchive/>
-          <div className="hidden sm:flex justify-center mt-4 w-full">
-            <button className="button" onClick={toggleCharts}>
-              <h1>{map ? "Charts" : "Map"}</h1>
-            </button>
-          </div>
         </>
       )}
       {tracker && <LiveTracker />}
       {!tracker && (
-        <>
-          <div className="md:hidden mt-4 w-full">
-            <Charts/>
-          </div>
-        </>
+        <div className="sm:hidden w-full">
+          <Charts/>
+        </div>
       )}
     </div>
   );

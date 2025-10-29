@@ -21,7 +21,7 @@
 }
 
 .desktop-view {
-  @apply h-screen sm:h-[calc(100vh-5rem)] w-full overflow-hidden sm:flex-row flex-col-reverse hidden sm:flex
+  @apply h-[calc(100vh-5rem)] w-full hidden sm:flex 
 }
 
 nav {
@@ -33,11 +33,11 @@ nav {
 }
 
 .loading-screen img {
-  @apply md:w-60 w-40 animate-spin
+  @apply sm:w-60 w-40 animate-spin
 }
 
 .interface {
-  @apply p-4 md:p-8 flex-col overflow-y-auto overflow-x-hidden gap-4 w-full md:w-1/4 min-w-96 h-full bg-opacity-60 flex items-center 
+  @apply p-4 sm:p-8 flex-col overflow-y-auto overflow-x-hidden gap-4 w-full sm:w-1/4 min-w-96 h-full bg-opacity-60 flex items-center 
 }
 
 .button {
@@ -45,7 +45,7 @@ nav {
 }
 
 .select {
-  @apply bg-white !rounded-md h-10 px-1 text-black font-bold 
+  @apply bg-white !rounded-md h-10 text-black font-bold 
 }
 
 .season-data, .storm-data {
@@ -69,7 +69,7 @@ nav {
 }
 
 .charts-container {
-  @apply w-full flex flex-col overflow-auto md:p-8
+  @apply w-full flex flex-col overflow-auto sm:p-8 p-0
 }
 
 .charts {
@@ -85,7 +85,7 @@ nav {
 }
 
 .chart-wrapper {
-  @apply h-60 md:h-80 w-full
+  @apply h-64 sm:h-96 w-full
 }
 
 /* Mobile chart toggle styles - only on mobile devices */
@@ -97,14 +97,17 @@ nav {
     @apply w-[100vh] h-[100vw] rotate-90 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-cover bg-center bg-no-repeat;
     background-image: url('/hurricane.jpg');
   }
+  .charts-container {
+    @apply p-0
+  }
 }
 
 .mobile-interface {
-  @apply md:hidden flex w-full justify-center bg-black bg-opacity-50 rounded-t-3xl bg-cover bg-center bg-fixed absolute top-[96%]
+  @apply sm:hidden flex w-full justify-center bg-black bg-opacity-50 rounded-t-3xl bg-cover bg-center bg-fixed absolute top-[96%]
 }
 
 .mobile-map {
-  @apply md:hidden w-full h-[calc(100vh-5rem)] fixed top-20 -z-10
+  @apply sm:hidden w-full h-[calc(100vh-5rem)] fixed top-20 -z-10
 }
 
 .legend-container {
@@ -133,7 +136,7 @@ ul li h2 {
 
 /* Interface */
 .drag-handle {
-  @apply bg-gray-300 rounded-full w-20 h-1 md:hidden
+  @apply bg-gray-300 rounded-full w-20 h-1 sm:hidden
 }
 
 .storm-image-container {

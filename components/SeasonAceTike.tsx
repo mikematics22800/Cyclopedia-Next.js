@@ -1,10 +1,23 @@
 'use client';
 
+import { useState } from "react";
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
+import { Bar } from 'react-chartjs-2';
 import { useAppContext } from '../contexts/AppContext';
-import BarChart from './BarChart';
 
-const SeasonAceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
+
+const SeasonAceTike = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
   const { names, seasonACE, year, season } = useAppContext();
+  const [key, setKey] = useState(0)
+
+  const onClick = () => {
+    if (window.innerWidth >= 480) {
+      return
+    } 
+    {!expanded && setKey(prev => prev + 1)}
+    toggleChart()
+  };
 
   // Calculate season TIKE if year >= 2004
   const calculateSeasonTIKE = () => {
@@ -129,8 +142,8 @@ const SeasonAceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => v
 
   return (
     <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
-      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
-        <BarChart options={options} data={data} />
+      <div className={expanded ? "chart-expanded" : "chart"}>
+        <Bar key={key} options={options} data={data} onClick={onClick}/>
       </div>
     </div>
   );

@@ -1,10 +1,23 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { useAppContext } from '../contexts/AppContext';
-import LineChart from './LineChart';
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
+import { Line } from 'react-chartjs-2';
 
-const AceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
+
+const AceTike = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
   const { dates, ACEArray, TIKEArray, year } = useAppContext();
+  const [key, setKey] = useState(0)
+  
+  const onClick = () => {
+    if (window.innerWidth >= 480) {
+      return
+    } 
+    {!expanded && setKey(prev => prev + 1)}
+    toggleChart()
+  };
 
   const options = {
     responsive: true,
@@ -110,8 +123,8 @@ const AceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) 
 
   return (
     <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
-      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
-        <LineChart options={options} data={data} />
+      <div className={expanded ? "chart-expanded" : "chart"}>
+        <Line key={key} options={options} data={data} onClick={onClick} />
       </div>
     </div>
   );

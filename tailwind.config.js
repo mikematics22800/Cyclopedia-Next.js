@@ -10,6 +10,9 @@ module.exports = {
       fontFamily: {
         'storm': ['storm', 'sans-serif'],
       },
+      screens: {
+        'xs': '480px',
+      },
     },
   },
   plugins: [],

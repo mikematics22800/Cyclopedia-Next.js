@@ -388,7 +388,10 @@ export default function Home() {
                 <h1 className="storm-font text-4xl text-white italic hidden sm:block">CYCLOPEDIA</h1>
               </div>
               <div className="flex items-center gap-5">
-                <button onClick={toggleTracker} className="button">
+                {!tracker && <button className="button !hidden sm:!flex" onClick={toggleCharts}>
+                  <h1>{map ? "Charts" : "Map"}</h1>
+                </button>}
+                <button className="button" onClick={toggleTracker}>
                   <h1>{tracker ? "Historical Archive" : "Live Tracker"}</h1>
                 </button>
               </div>
