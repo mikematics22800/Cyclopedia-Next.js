@@ -3,7 +3,7 @@
 import { useAppContext } from '../contexts/AppContext';
 import LineChart from './LineChart';
 
-const AceTike = () => {
+const AceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
   const { dates, ACEArray, TIKEArray, year } = useAppContext();
 
   const options = {
@@ -109,8 +109,10 @@ const AceTike = () => {
   };
 
   return (
-    <div className="chart">
-      <LineChart options={options} data={data} />
+    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
+      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
+        <LineChart options={options} data={data} />
+      </div>
     </div>
   );
 };

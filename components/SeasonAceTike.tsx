@@ -3,7 +3,7 @@
 import { useAppContext } from '../contexts/AppContext';
 import BarChart from './BarChart';
 
-const SeasonAceTike = () => {
+const SeasonAceTike = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
   const { names, seasonACE, year, season } = useAppContext();
 
   // Calculate season TIKE if year >= 2004
@@ -128,8 +128,10 @@ const SeasonAceTike = () => {
   };
 
   return (
-    <div className="chart">
-      <BarChart options={options} data={data} />
+    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
+      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
+        <BarChart options={options} data={data} />
+      </div>
     </div>
   );
 };

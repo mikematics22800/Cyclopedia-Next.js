@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import BarChart from './BarChart';
 
-const SeasonIntensity = () => {
+const SeasonIntensity = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
   const { names, maxWinds, season } = useAppContext();
   const [minPressures, setMinPressures] = useState<number[]>([]);
 
@@ -98,8 +98,10 @@ const SeasonIntensity = () => {
   };
 
   return (
-    <div className="chart">
-      <BarChart options={options} data={data} />
+    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
+      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
+        <BarChart options={options} data={data} />
+      </div>
     </div>
   );
 };

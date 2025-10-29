@@ -81,31 +81,21 @@ nav {
 }
 
 .chart {
-  @apply border-2 border-white h-60 md:h-80 p-4 bg-black bg-opacity-50 cursor-pointer rounded-lg w-full
+  @apply border-2 border-white p-4 cursor-pointer rounded-lg w-full h-full bg-black bg-opacity-50
+}
+
+.chart-wrapper {
+  @apply h-60 md:h-80 w-full
 }
 
 /* Mobile chart toggle styles - only on mobile devices */
 @media (max-width: 480px) {
-  .chart-wrapper {
-    @apply transition-all duration-300 ease-in-out cursor-pointer
+  .chart-expanded {
+    @apply chart !rounded-none
   }
-
-  .chart-wrapper.expanded {
-    @apply fixed inset-0 z-50 w-screen h-screen bg-cover bg-center bg-no-repeat;
-    background-image: url('/hurricane-v.jpg');
-  }
-  
-  .chart-wrapper.expanded .chart {
-    @apply w-full h-full border-0 rounded-none bg-black bg-opacity-30;
-    width: 100vh !important;
-    height: 100vw !important;
-    transform: rotate(90deg);
-    transform-origin: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50vw;
-    margin-left: -50vh;
+  .chart-expanded-wrapper {
+    @apply w-[100vh] h-[100vw] rotate-90 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-cover bg-center bg-no-repeat;
+    background-image: url('/hurricane.jpg');
   }
 }
 

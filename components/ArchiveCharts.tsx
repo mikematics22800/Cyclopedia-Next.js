@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, ReactNode, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Intensity from "./Intensity";
 import AceTike from "./AceTike";
-import WindsAndPressures from "./SeasonIntensity";
+import SeasonIntensity from "./SeasonIntensity";
 import SeasonAceTike from "./SeasonAceTike";
 
 const ArchiveCharts = () => {
-  const [expandedChart, setExpandedChart] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [expandIntensity, setExpandIntensity] = useState(false);
+  const [expandAceTike, setExpandAceTike] = useState(false);
+  const [expandSeasonIntensity, setExpandSeasonIntensity] = useState(false);
+  const [expandSeasonAceTike, setExpandSeasonAceTike] = useState(false);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -17,45 +20,30 @@ const ArchiveCharts = () => {
 
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
-    
-    return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
-  const handleChartTap = (chartName: string) => {
-    // Only allow chart expansion on mobile devices
-    if (!isMobile) return;
-    
-    if (expandedChart === chartName) {
-      setExpandedChart(null);
-    } else {
-      setExpandedChart(chartName);
+  const toggleChart = (chart: string) => {
+    if (!isMobile) {
+      return;
     }
-  };
-
-  const ChartWrapper = ({ children, chartName }: { children: ReactNode; chartName: string }) => (
-    <div 
-      className={`chart-wrapper ${expandedChart === chartName ? 'expanded' : ''}`}
-      onClick={() => handleChartTap(chartName)}
-    >
-      {children}
-    </div>
-  );
+    if (chart === 'intensity') {
+      setExpandIntensity(!expandIntensity);
+    } else if (chart === 'aceTike') {
+      setExpandAceTike(!expandAceTike);
+    } else if (chart === 'seasonIntensity') {
+      setExpandSeasonIntensity(!expandSeasonIntensity);
+    } else if (chart === 'seasonAceTike') {
+      setExpandSeasonAceTike(!expandSeasonAceTike);
+    }
+  }
 
   return (
     <div className="charts-container">
       <div className="charts">
-        <ChartWrapper chartName="intensity">
-          <Intensity/>
-        </ChartWrapper>
-        <ChartWrapper chartName="acetike">
-          <AceTike/>
-        </ChartWrapper>
-        <ChartWrapper chartName="windsandpressures">
-          <WindsAndPressures/>
-        </ChartWrapper>
-        <ChartWrapper chartName="seasonacetike">
-          <SeasonAceTike/>
-        </ChartWrapper>
+        <Intensity expanded={expandIntensity} onClick={() => toggleChart('intensity')}/>
+        <AceTike expanded={expandAceTike} onClick={() => toggleChart('aceTike')}/>
+        <SeasonIntensity expanded={expandSeasonIntensity} onClick={() => toggleChart('seasonIntensity')}/>
+        <SeasonAceTike expanded={expandSeasonAceTike} onClick={() => toggleChart('seasonAceTike')}/>
       </div>
     </div>
   );

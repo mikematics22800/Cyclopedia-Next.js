@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import LineChart from './LineChart';
 
-const Intensity = () => {
+const Intensity = ({expanded, onClick}: {expanded: boolean; onClick: () => void}) => {
   const { storm, dates } = useAppContext();
 
   const [wind, setWind] = useState<number[]>([]);
@@ -103,8 +103,10 @@ const Intensity = () => {
   };
 
   return (
-    <div className="chart">
-      <LineChart options={options} data={data} />
+    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
+      <div className={expanded ? "chart-expanded" : "chart"} onClick={onClick}>
+        <LineChart options={options} data={data} />
+      </div>
     </div>
   );
 };
