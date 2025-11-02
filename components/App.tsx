@@ -240,7 +240,7 @@ export default function Home() {
           <>
             <nav>
               <div className="flex items-center">
-                <Image src="/cyclone.png" alt="Cyclopedia" width={40} height={40} className="mr-2" priority />
+                <Image src="/cyclone.png" alt="Cyclopedia" width={40} height={40} className="mr-2" priority unoptimized />
                 <h1 className="storm-font text-4xl text-white italic hidden sm:block">CYCLOPEDIA</h1>
               </div>
               <div className="flex items-center gap-5">
