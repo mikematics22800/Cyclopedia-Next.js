@@ -294,7 +294,7 @@ const convertToUTC = (dateStr: string) => {
 };
 
 const LiveStorms = () => {
-  const { liveHurdat, forecastCone, selectedLiveStorm, selectLiveStorm, selectLiveStormPoint } = useAppContext();
+  const { liveHurdat, forecastCone, selectedLiveStorm, selectLiveStorm } = useAppContext();
 
   // Check if data exists
   if (!liveHurdat || liveHurdat.length === 0) {
@@ -405,11 +405,6 @@ const LiveStorms = () => {
               key={`marker-${stormId}-${i}`} 
               position={[lat, lng]} 
               icon={icon}
-              eventHandlers={{
-                click: () => {
-                  selectLiveStormPoint(stormId, lat, lng);
-                }
-              }}
             >
               <Popup className="w-fit font-bold">
                 <h1 className="font-bold text-[1rem]">{status} {STORMNAME.split(" ").pop()}</h1>

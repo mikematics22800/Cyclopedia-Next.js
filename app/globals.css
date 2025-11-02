@@ -2,13 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Storm';
-  src: url('/storm.ttf') 
-}
-
 .storm-font {
-  font-family: Storm;
+  font-family: var(--font-storm), sans-serif;
   font-style: italic;
 }
 
@@ -196,7 +191,7 @@ ul li h2 {
 }
 
 .retired-badge {
-  @apply w-full
+  @apply w-auto h-auto max-w-full object-contain
 }
 
 .cyclone-icon {

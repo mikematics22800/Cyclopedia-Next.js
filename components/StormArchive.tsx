@@ -1,11 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useAppContext } from '../contexts/AppContext';
+import { sum } from '../libs/sum';
 import CycloneIcon from '@mui/icons-material/Cyclone';
 
 const StormArchive = () => {
-  const { year, storm, stormId, ACE, TIKE } = useAppContext();
+  const { year, storm, stormId } = useAppContext();
+  const [ACE, setACE] = useState<number>(0);
+  const [TIKE, setTIKE] = useState<number>(0);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const [stormName, setStormName] = useState<string>('');
@@ -136,11 +140,76 @@ const StormArchive = () => {
     }
     setTextColor(textColor);
 
+    // Calculate ACE
+    let ACEPoint = 0;
+    let windArray: number[] = [];
+    const ACEArray = data.map((point: any) => {
+      const wind = point.max_wind_kt;
+      const hour = parseInt(point.time_utc);
+      if (["TS", "SS", "HU"].includes(point.status)) {
+        if (hour % 600 == 0) {
+          ACEPoint += Math.pow(wind, 2)/10000;
+          if (windArray.length > 0) {
+            const average = sum(windArray)/windArray.length;
+            ACEPoint += Math.pow(average, 2)/10000;
+            windArray = [];
+          }
+        } else {
+          windArray.push(wind);
+        }
+      }
+      return ACEPoint;
+    });
+    const calculatedACE = Math.max(...ACEArray);
+    setACE(calculatedACE);
+
+    // Calculate TIKE if year >= 2004 and wind radii data is available
+    if (year >= 2004) {
+      let tikeArray: number[] = [];
+      let cumulativeTIKE = 0;
+      
+      data.forEach((point: any) => {
+        if (point['34kt_wind_nm'] && point['50kt_wind_nm'] && point['64kt_wind_nm']) {
+          const wind34 = point['34kt_wind_nm'];
+          const wind50 = point['50kt_wind_nm'];
+          const wind64 = point['64kt_wind_nm'];
+          
+          // Calculate area of wind field for each wind speed threshold
+          const area34 = Math.PI * Math.pow((wind34.ne + wind34.se + wind34.sw + wind34.nw) / 4 * 1852, 2);
+          const area50 = Math.PI * Math.pow((wind50.ne + wind50.se + wind50.sw + wind50.nw) / 4 * 1852, 2);
+          const area64 = Math.PI * Math.pow((wind64.ne + wind64.se + wind64.sw + wind64.nw) / 4 * 1852, 2);
+          
+          // Calculate kinetic energy for each wind speed threshold
+          const rho = 1.15;
+          const v34 = 34 * 0.514444;
+          const v50 = 50 * 0.514444;
+          const v64 = 64 * 0.514444;
+          
+          const ke34 = 0.5 * rho * Math.pow(v34, 2) * area34;
+          const ke50 = 0.5 * rho * Math.pow(v50, 2) * area50;
+          const ke64 = 0.5 * rho * Math.pow(v64, 2) * area64;
+          
+          const totalKE = ke34 + ke50 + ke64;
+          const totalKETJ = totalKE / 1e12;
+          
+          cumulativeTIKE += totalKETJ;
+          tikeArray.push(cumulativeTIKE);
+        } else {
+          tikeArray.push(cumulativeTIKE);
+        }
+      });
+      
+      const finalTIKE = Math.max(...tikeArray);
+      setTIKE(finalTIKE);
+    } else {
+      setTIKE(0);
+    }
+
     // Cleanup function to clear timeout
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [storm]);
+  }, [storm, year]);
 
   if (!storm) return null;
 
@@ -158,14 +227,6 @@ const StormArchive = () => {
                 style={{backgroundImage: `url(${image})`}} 
                 href={`https://www.nhc.noaa.gov/data/tcr/${stormId}.pdf`}
               >
-                {/* Hidden img element to track loading */}
-                {image !== "" && (
-                  <img 
-                    src={image} 
-                    style={{display: 'none'}}
-                    alt=""
-                  />
-                )}
                 {/* No Image State */}
                 {image == "" && (
                   <div className='unavailable'>
@@ -175,7 +236,18 @@ const StormArchive = () => {
                 )}
                 
                 {/* Retired Badge */}
-                {retired && <img className='retired-badge' src="/retired.png"/>}
+                {retired && (
+                  <Image 
+                    className='retired-badge' 
+                    src="/retired.png" 
+                    alt="Retired" 
+                    width={120} 
+                    height={120}
+                    quality={100}
+                    unoptimized
+                    priority
+                  />
+                )}
               </a>
               <h1 className='title' style={{color:textColor}}>
                 {stormName}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useMemo } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import StormArchive from "./StormArchive";
 import SeasonArchive from "./SeasonArchive";
@@ -18,37 +18,18 @@ const Interface = () => {
     setStormId, 
     setWindField, 
     season, 
-    tracker, 
-    selectArchivedStormPoint
+    tracker
   } = useAppContext();
 
-  const startYear = basin === 'atl' ? 1850 : 1948;
-  const years = new Array(2024 - startYear).fill(0);
+  const startYear = useMemo(() => basin === 'atl' ? 1850 : 1948, [basin]);
+  const years = useMemo(() => new Array(2024 - startYear).fill(0), [startYear]);
 
-  const [stormIds, setStormIds] = useState<string[] | null>(null);
-  const lastFocusedStormRef = useRef<string | null>(null);
-
-  useEffect(() => {
+  const stormIds = useMemo(() => {
     if (season) {
-      const stormIds = season.map((storm) => {
-        return storm.id;
-      });
-      setStormIds(stormIds);
-      lastFocusedStormRef.current = null; // Reset when season changes
+      return season.map((storm) => storm.id);
     }
+    return null;
   }, [season]);
-
-  // Focus on the selected storm
-  useEffect(() => {
-    if (season && stormId && !tracker && lastFocusedStormRef.current !== stormId) {
-      const selectedStorm = season.find((storm) => storm.id === stormId);
-      if (selectedStorm && selectedStorm.data && selectedStorm.data.length > 0) {
-        const firstPoint = selectedStorm.data[0];
-        selectArchivedStormPoint(stormId, firstPoint.lat, firstPoint.lng);
-        lastFocusedStormRef.current = stormId;
-      }
-    }
-  }, [stormId, season, tracker, selectArchivedStormPoint]);
 
   return (
     <div className='interface'>

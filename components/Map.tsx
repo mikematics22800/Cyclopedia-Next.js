@@ -4,14 +4,13 @@ import { useState } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import ArchivedStorms from "./ArchivedStorms";
+import ArchiveStorms from "./ArchiveStorms";
 import LiveStorms from "./LiveStorms";
 import WindField from "./WindField";
 import Legend from "./Legend";
 import ClimateLayers from "./ClimateLayers";
 import InvestAreas from "./InvestAreas";
 import Invests from "./Invests";
-import MapController from "./MapController";
 
 interface WeatherLayers {
   clouds: boolean;
@@ -63,11 +62,10 @@ const Map = () => {
         {tracker && weatherLayers.pressure && <TileLayer url={`https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=${id}`}/>}
         
         {/* Storm Layers */}
-        {tracker ? <LiveStorms /> : <ArchivedStorms />}
+        {tracker ? <LiveStorms /> : <ArchiveStorms />}
         {year >= 2004 && windField && !tracker && <WindField/>}
         {tracker && <InvestAreas />}
         {tracker && <Invests />}
-        <MapController />
       </MapContainer>
     </div>
   );

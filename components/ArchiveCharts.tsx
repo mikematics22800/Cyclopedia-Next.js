@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-const Intensity = dynamic(() => import("./Intensity"));
-const AceTike = dynamic(() => import("./AceTike"));
-const SeasonIntensity = dynamic(() => import("./SeasonIntensity"));
-const SeasonAceTike = dynamic(() => import("./SeasonAceTike"));
+const Intensity = dynamic(() => import("./Intensity"), { ssr: false });
+const AceTike = dynamic(() => import("./AceTike"), { ssr: false });
+const SeasonIntensity = dynamic(() => import("./SeasonIntensity"), { ssr: false });
+const SeasonAceTike = dynamic(() => import("./SeasonAceTike"), { ssr: false });
 
 const ArchiveCharts = () => {
   const [expandIntensity, setExpandIntensity] = useState(false);

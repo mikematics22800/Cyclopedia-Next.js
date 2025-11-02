@@ -2,6 +2,27 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.nhc.noaa.gov',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tile.openstreetmap.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tile.openweathermap.org',
+      },
+    ],
+  },
   async headers() {
     return [
       {
@@ -20,6 +41,10 @@ const nextConfig: NextConfig = {
             key: "Access-Control-Allow-Headers",
             value: "Content-Type, Authorization",
           },
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
         ],
       },
       {
@@ -33,6 +58,26 @@ const nextConfig: NextConfig = {
           {
             key: "Service-Worker-Allowed",
             value: "/",
+          },
+        ],
+      },
+      {
+        // Static assets caching
+        source: "/:path*(.jpg|.jpeg|.png|.gif|.svg|.ico|.webp)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Font files caching
+        source: "/:path*(.ttf|.woff|.woff2|.eot)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

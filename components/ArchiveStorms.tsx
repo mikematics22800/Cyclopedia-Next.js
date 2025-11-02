@@ -5,8 +5,8 @@ import { Marker, Popup, Polyline } from 'react-leaflet';
 import { divIcon } from 'leaflet';
 import { StormDataPoint } from '../libs/hurdat';
 
-const ArchivedStorms = () => {
-  const { season, selectArchivedStormPoint, stormId } = useAppContext();
+const ArchiveStorms = () => {
+  const { season, setStormId, stormId } = useAppContext();
 
   if (!season) return null;
 
@@ -156,10 +156,10 @@ const ArchivedStorms = () => {
             <Marker 
               key={i} 
               position={coords} 
-              icon={icon} 
+              icon={icon}
               eventHandlers={{
                 click: () => {
-                  selectArchivedStormPoint(id, lat, lng);
+                  setStormId(id);
                 }
               }}
             >
@@ -191,4 +191,4 @@ const ArchivedStorms = () => {
   );
 };
 
-export default ArchivedStorms;
+export default ArchiveStorms;

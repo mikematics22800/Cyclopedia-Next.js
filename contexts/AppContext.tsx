@@ -9,36 +9,24 @@ interface AppContextType {
   year: number;
   setYear: (year: number) => void;
   season: Storm[] | null;
-  setSeason: (season: Storm[] | null) => void;
   storm: Storm | null;
-  setStorm: (storm: Storm | null) => void;
   stormId: string;
   setStormId: (stormId: string) => void;
   dates: string[];
-  landfallingStorms: Storm[];
   windField: boolean;
   setWindField: (windField: boolean) => void;
   names: string[];
-  ACE: number;
-  ACEArray: number[];
-  TIKE: number;
-  TIKEArray: number[];
   maxWinds: number[];
   seasonACE: number[];
   liveHurdat: GeoJSONFeature[];
   forecastCone: GeoJSONFeature[];
   toggleTracker: () => void;
   tracker: boolean;
-  toggleCharts: () => void;
-  map: boolean;
   investAreas: GeoJSONFeature[];
   setinvestAreas: (areas: GeoJSONFeature[]) => void;
   selectedLiveStorm: string | null;
   selectLiveStorm: (stormId: string) => void;
   invests: GeoJSONFeature[];
-  clickedPoint: { lat: number; lng: number } | null;
-  selectArchivedStormPoint: (stormId: string, lat: number, lng: number) => void;
-  selectLiveStormPoint: (stormId: string, lat: number, lng: number) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
