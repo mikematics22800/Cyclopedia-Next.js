@@ -10,13 +10,11 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement
 const SeasonIntensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
   const { names, maxWinds, season } = useAppContext();
   const [minPressures, setMinPressures] = useState<number[]>([]);
-  const [key, setKey] = useState(0)
 
   const onClick = () => {
     if (window.innerWidth >= 480) {
       return
     } 
-    {!expanded && setKey(prev => prev + 1)}
     toggleChart()
   };
 
@@ -112,7 +110,7 @@ const SeasonIntensity = ({toggleChart, expanded}: {toggleChart: () => void, expa
   return (
     <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
       <div className={expanded ? "chart-expanded" : "chart"}>
-        <Bar key={key} options={options} data={data} onClick={onClick}/>
+        <Bar options={options} data={data} onClick={onClick}/>
       </div>
     </div>
   );

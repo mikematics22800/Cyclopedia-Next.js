@@ -9,13 +9,11 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement
 
 const SeasonAceTike = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
   const { names, seasonACE, year, season } = useAppContext();
-  const [key, setKey] = useState(0)
 
   const onClick = () => {
     if (window.innerWidth >= 480) {
       return
     } 
-    {!expanded && setKey(prev => prev + 1)}
     toggleChart()
   };
 
@@ -143,7 +141,7 @@ const SeasonAceTike = ({toggleChart, expanded}: {toggleChart: () => void, expand
   return (
     <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
       <div className={expanded ? "chart-expanded" : "chart"}>
-        <Bar key={key} options={options} data={data} onClick={onClick}/>
+        <Bar options={options} data={data} onClick={onClick}/>
       </div>
     </div>
   );

@@ -11,13 +11,11 @@ const Intensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: 
   const { storm, dates } = useAppContext();
   const [wind, setWind] = useState<number[]>([]);
   const [pressure, setPressure] = useState<(number | null)[]>([]);
-  const [key, setKey] = useState(0)
 
   const onClick = () => {
     if (window.innerWidth >= 480) {
       return
     } 
-    {!expanded && setKey(prev => prev + 1)}
     toggleChart()
   };
 
@@ -116,7 +114,7 @@ const Intensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: 
   return (
     <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
       <div className={expanded ? "chart-expanded" : "chart"}>
-        <Line key={key} options={options} data={data} onClick={onClick}/>
+        <Line options={options} data={data} onClick={onClick}/>
       </div>
     </div>
   );
