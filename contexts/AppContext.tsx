@@ -20,13 +20,9 @@ interface AppContextType {
   seasonACE: number[];
   liveHurdat: GeoJSONFeature[];
   forecastCone: GeoJSONFeature[];
-  toggleTracker: () => void;
   tracker: boolean;
-  investAreas: GeoJSONFeature[];
-  setinvestAreas: (areas: GeoJSONFeature[]) => void;
-  selectedLiveStorm: string | null;
-  selectLiveStorm: (stormId: string) => void;
-  invests: GeoJSONFeature[];
+  liveStormId: string | null;
+  setLiveStormId: (liveStormId: string | null) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);

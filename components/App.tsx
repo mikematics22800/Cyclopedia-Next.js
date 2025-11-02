@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { getArchive, getLive, getCone, getInvestArea, getInvest } from "../libs/hurdat";
+import { getArchive, getLive, getCone } from "../libs/hurdat";
 import { sum } from "../libs/sum";
 import { AppProvider } from "../contexts/AppContext";
 import Interface from "../components/Interface";
@@ -11,7 +11,7 @@ const Map = dynamic(() => import("../components/Map"), { ssr: false });
 import ArchiveCharts from "../components/ArchiveCharts";
 import LoadingScreen from "../components/LoadingScreen";
 
-export default function Home() {
+export default function App() {
   const [basin, setBasin] = useState<string>('atl');
   const [year, setYear] = useState<number>(2024);
   const [season, setSeason] = useState<any[] | null>(null);
@@ -26,9 +26,7 @@ export default function Home() {
   const [liveHurdat, setLiveHurdat] = useState<any[]>([]);
   const [forecastCone, setForecastCone] = useState<any[]>([]);
   const [tracker, setTracker] = useState<boolean>(false);
-  const [investAreas, setinvestAreas] = useState<any[]>([]);
-  const [selectedLiveStorm, setSelectedLiveStorm] = useState<string | null>(null);
-  const [invests, setInvests] = useState<any[]>([]);
+  const [liveStormId, setLiveStormId] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
@@ -46,12 +44,6 @@ export default function Home() {
     getCone().then(data => {
       setForecastCone(data || []);
     });  
-    getInvestArea().then(data => {
-      setinvestAreas(data || []);
-    });
-    getInvest().then(data => {
-      setInvests(data || []);
-    });
   }, []);
 
   useEffect(() => {
@@ -166,7 +158,6 @@ export default function Home() {
           });
           return cumulativeTIKE;
         });
-        // Note: seasonTIKE could be added to context if needed elsewhere
       }
     }
   }, [season, year]);
@@ -177,10 +168,6 @@ export default function Home() {
 
   const toggleTracker = useCallback(() => {
     setTracker(prev => !prev);
-  }, []);
-
-  const selectLiveStorm = useCallback((stormId: string) => {
-    setSelectedLiveStorm(stormId);
   }, []);
 
   const value = useMemo(() => ({
@@ -200,13 +187,9 @@ export default function Home() {
     seasonACE,
     liveHurdat,
     forecastCone,
-    toggleTracker,
     tracker,
-    investAreas,
-    setinvestAreas,
-    selectedLiveStorm,
-    selectLiveStorm,
-    invests
+    liveStormId,
+    setLiveStormId
   }), [
     basin,
     setBasin,
@@ -224,13 +207,9 @@ export default function Home() {
     seasonACE,
     liveHurdat,
     forecastCone,
-    toggleTracker,
-    tracker,
-    investAreas,
-    setinvestAreas,
-    selectedLiveStorm,
-    selectLiveStorm,
-    invests
+    tracker,  
+    liveStormId,
+    setLiveStormId
   ]);
 
   return (

@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
-import { useAppContext } from "../contexts/AppContext";
-import { Marker, Popup, Polyline } from "react-leaflet";
+import React, { useMemo, useState, useEffect } from 'react';
+import { Marker, Popup, Polyline, Polygon } from "react-leaflet";
 import L from "leaflet";
-import { GeoJSONFeature } from "../libs/hurdat";
+import { GeoJSONFeature, getInvest, getInvestArea } from "../libs/hurdat";
 
 interface InvestProperties {
   prob2day: string;
@@ -26,16 +25,29 @@ interface Connection {
   color: string;
 }
 
+interface PolygonStyle {
+  fillColor: string;
+  color: string;
+  fillOpacity: number;
+  weight: number;
+}
+
 type LatLng = [number, number];
 type Polygon = LatLng[];
 
 const Invests = (): React.ReactElement | null => {
-  const { invests, investAreas } = useAppContext();
+  const [invests, setInvests] = useState<GeoJSONFeature[]>([]);
+  const [investAreas, setInvestAreas] = useState<GeoJSONFeature[]>([]);
 
-  // Check if data exists
-  if (!invests || invests.length === 0) {
-    return null;
-  }
+  // Fetch data on component mount
+  useEffect(() => {
+    getInvest().then(data => {
+      if (data) setInvests(data);
+    });
+    getInvestArea().then(data => {
+      if (data) setInvestAreas(data);
+    });
+  }, []);
 
   // Function to determine color based on probability
   const getColorByProbability = (prob2day: string, prob7day: string): string => {
@@ -50,6 +62,45 @@ const Invests = (): React.ReactElement | null => {
       return '#ffa500'; // Orange for medium probability
     } else {
       return '#ffff00'; // Yellow for low probability
+    }
+  };
+
+  // Function to get polygon style based on probability
+  const getPolygonStyleByProbability = (prob2day: string, prob7day: string): PolygonStyle => {
+    const maxProb = Math.max(
+      parseInt(prob2day.replace('%', '') || '0', 10),
+      parseInt(prob7day.replace('%', '') || '0', 10)
+    );
+
+    if (maxProb >= 70) {
+      return {
+        fillColor: 'red',
+        color: 'red',
+        fillOpacity: 0.3,
+        weight: 2
+      };
+    } else if (maxProb >= 40 && maxProb <= 60) {
+      return {
+        fillColor: 'orange',
+        color: 'orange',
+        fillOpacity: 0.3,
+        weight: 2
+      };
+    } else if (maxProb >= 0 && maxProb <= 30) {
+      return {
+        fillColor: 'yellow',
+        color: 'yellow',
+        fillOpacity: 0.3,
+        weight: 2
+      };
+    } else {
+      // Default for any other values
+      return {
+        fillColor: 'gray',
+        color: 'gray',
+        fillOpacity: 0.3,
+        weight: 2
+      };
     }
   };
 
@@ -71,7 +122,7 @@ const Invests = (): React.ReactElement | null => {
   };
 
   // Function to check if a point is inside any area of interest
-  const isPointInsideArea = (point: [number, number], areas: GeoJSONFeature[] | undefined): boolean => {
+  const isPointInsideArea = (point: [number, number], areas: GeoJSONFeature[]): boolean => {
     if (!areas || areas.length === 0) return false;
     
     return areas.some(area => {
@@ -162,8 +213,40 @@ const Invests = (): React.ReactElement | null => {
     return { points, connections };
   }, [invests, investAreas]);
 
+  // Check if data exists
+  if ((!invests || invests.length === 0) && (!investAreas || investAreas.length === 0)) {
+    return null;
+  }
+
   return (
     <>
+      {/* Render invest area polygons */}
+      {investAreas.map((feature: GeoJSONFeature, index: number) => {
+        const properties = feature.properties as InvestProperties;
+        const { prob2day, prob7day, basin } = properties;
+        const style = getPolygonStyleByProbability(prob2day, prob7day);
+
+        // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
+        const coordinates = (feature.geometry.coordinates[0] as [number, number][]).map((coord: [number, number]) => [coord[1], coord[0]] as [number, number]);
+
+        return (
+          <Polygon
+            key={`area-${index}`}
+            positions={coordinates}
+            fillColor={style.fillColor}
+            color={style.color}
+            fillOpacity={style.fillOpacity}
+            weight={style.weight}
+          >
+            <Popup className="w-fit font-bold">
+              <h1 className="text-[1rem] font-bold">Potential Development</h1>
+              <p className="!my-1">2-Day Probability: {prob2day}</p>
+              <p className="!my-1">7-Day Probability: {prob7day}</p>
+            </Popup>
+          </Polygon>
+        );
+      })}
+
       {/* Render connection lines */}
       {pointsAndConnections.connections.map((connection, index) => (
         <Polyline

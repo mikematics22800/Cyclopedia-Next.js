@@ -9,38 +9,33 @@ import LiveStorms from "./LiveStorms";
 import WindField from "./WindField";
 import Legend from "./Legend";
 import ClimateLayers from "./ClimateLayers";
-import InvestAreas from "./InvestAreas";
 import Invests from "./Invests";
 
-interface WeatherLayers {
+interface Layers {
   clouds: boolean;
-  precipitation: boolean;
+  precip: boolean;
   wind: boolean;
   pressure: boolean;
   temp: boolean;
 }
 
 const Map = () => {
-  const { tracker, windField, year } = useAppContext();
+  const { tracker, year, windField } = useAppContext();
   const id = process.env.NEXT_PUBLIC_OWM_KEY;
 
-  const [weatherLayers, setWeatherLayers] = useState<WeatherLayers>({
+  const [layers, setLayers] = useState<Layers>({
     clouds: true,
-    precipitation: true,
+    precip: true,
     wind: true,
     pressure: false,
     temp: false
   });
 
-  const handleLayerChange = (layers: WeatherLayers) => {
-    setWeatherLayers(layers);
-  };
-
   return (
     <div className="map relative">
       {/* Legend and Weather Controls */}
       <div className="map-controls-container">
-        {tracker && <ClimateLayers onLayerChange={handleLayerChange} />}
+        {tracker && <ClimateLayers layers={layers} setLayers={setLayers}/>}
         <Legend />
       </div>
 
@@ -55,16 +50,15 @@ const Map = () => {
         <TileLayer url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'/>
         
         {/* Weather Layers - Only in live/tracker mode */}
-        {tracker && weatherLayers.clouds && <TileLayer url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${id}`} />}
-        {tracker && weatherLayers.precipitation && <TileLayer url={`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${id}`}/>}
-        {tracker && weatherLayers.temp && <TileLayer url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${id}`}/>}
-        {tracker && weatherLayers.wind && <TileLayer url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${id}`}/>}      
-        {tracker && weatherLayers.pressure && <TileLayer url={`https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=${id}`}/>}
+        {tracker && layers.clouds && <TileLayer url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${id}`} />}
+        {tracker && layers.precip && <TileLayer url={`https://tile.openweathermap.org/map/precip_new/{z}/{x}/{y}.png?appid=${id}`}/>}
+        {tracker && layers.temp && <TileLayer url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${id}`}/>}
+        {tracker && layers.wind && <TileLayer url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${id}`}/>}      
+        {tracker && layers.pressure && <TileLayer url={`https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=${id}`}/>}
         
         {/* Storm Layers */}
         {tracker ? <LiveStorms /> : <ArchiveStorms />}
         {year >= 2004 && windField && !tracker && <WindField/>}
-        {tracker && <InvestAreas />}
         {tracker && <Invests />}
       </MapContainer>
     </div>

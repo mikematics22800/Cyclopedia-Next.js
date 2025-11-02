@@ -182,6 +182,11 @@ const ArchiveStorms = () => {
               color={isSelected ? "white" : "gray"}
               opacity={isSelected ? 1 : .5}
               weight={isSelected ? 4 : 2}
+              eventHandlers={{
+                click: () => {
+                  setStormId(id);
+                }
+              }}
             />
             {points}
           </div>

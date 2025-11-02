@@ -68,69 +68,6 @@ const parseDate = (dateStr: string) => {
   }
 };
 
-// Calculate distance between two coordinates using Haversine formula
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const distance = R * c; // Distance in kilometers
-  return distance;
-};
-
-// Find the previous position for a storm
-const findPreviousPosition = (stormPoints: any[], currentPosition: any) => {
-  if (!stormPoints || stormPoints.length === 0 || !currentPosition) return null;
-  
-  // Group by advisory number
-  const advisories: any = {};
-  stormPoints.forEach(point => {
-    const advisoryNum = parseInt(point.properties.ADVISNUM);
-    if (!advisories[advisoryNum]) {
-      advisories[advisoryNum] = [];
-    }
-    advisories[advisoryNum].push(point);
-  });
-  
-  const currentAdvisoryNum = parseInt(currentPosition.properties.ADVISNUM);
-  const currentAdvisoryPoints = advisories[currentAdvisoryNum];
-  
-  if (!currentAdvisoryPoints) return null;
-  
-  // Sort points in the current advisory by date
-  currentAdvisoryPoints.sort((a: any, b: any) => {
-    const dateA = parseDate(a.properties.ADVDATE);
-    const dateB = parseDate(b.properties.ADVDATE);
-    return dateA.getTime() - dateB.getTime();
-  });
-  
-  // Find the index of current position
-  const currentIndex = currentAdvisoryPoints.findIndex((point: any) => point === currentPosition);
-  
-  // If there's a previous point in the same advisory, use it
-  if (currentIndex > 0) {
-    return currentAdvisoryPoints[currentIndex - 1];
-  }
-  
-  // If no previous point in same advisory, check previous advisory
-  const previousAdvisoryNum = currentAdvisoryNum - 1;
-  if (advisories[previousAdvisoryNum] && advisories[previousAdvisoryNum].length > 0) {
-    const previousAdvisoryPoints = advisories[previousAdvisoryNum];
-    previousAdvisoryPoints.sort((a: any, b: any) => {
-      const dateA = parseDate(a.properties.ADVDATE);
-      const dateB = parseDate(b.properties.ADVDATE);
-      return dateA.getTime() - dateB.getTime();
-    });
-    return previousAdvisoryPoints[previousAdvisoryPoints.length - 1];
-  }
-  
-  return null;
-};
-
 // Find the current position for a storm (latest advisory, current observation)
 const findCurrentPosition = (stormPoints: any[]) => {
   if (!stormPoints || stormPoints.length === 0) return null;
@@ -294,8 +231,7 @@ const convertToUTC = (dateStr: string) => {
 };
 
 const LiveStorms = () => {
-  const { liveHurdat, forecastCone, selectedLiveStorm, selectLiveStorm } = useAppContext();
-
+  const { liveHurdat, forecastCone, liveStormId, setLiveStormId } = useAppContext();
   // Check if data exists
   if (!liveHurdat || liveHurdat.length === 0) {
     return null;
@@ -405,6 +341,11 @@ const LiveStorms = () => {
               key={`marker-${stormId}-${i}`} 
               position={[lat, lng]} 
               icon={icon}
+              eventHandlers={{
+                click: () => {
+                  setLiveStormId(stormId);
+                }
+              }}
             >
               <Popup className="w-fit font-bold">
                 <h1 className="font-bold text-[1rem]">{status} {STORMNAME.split(" ").pop()}</h1>
@@ -436,7 +377,7 @@ const LiveStorms = () => {
   });
 
   const tracks = Object.entries(liveStorms).map(([stormId, data]: [string, any]) => {
-    const isSelected = stormId === selectedLiveStorm;
+    const isSelected = stormId === liveStormId;
     return (
       <div key={stormId}>
         <Polyline 
@@ -445,6 +386,11 @@ const LiveStorms = () => {
           color={isSelected ? "white" : "gray"}
           opacity={isSelected ? 1 : .5}
           weight={isSelected ? 4 : 2}
+          eventHandlers={{
+            click: () => {
+              setLiveStormId(stormId);
+            }
+          }}
         />
         {data.markers}
       </div>

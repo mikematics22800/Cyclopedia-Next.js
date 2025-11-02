@@ -286,7 +286,7 @@ const getStormStatus = (STORMTYPE: string, MAXWIND: number) => {
 };
 
 const LiveTracker = () => {
-  const { liveHurdat, selectLiveStorm, selectedLiveStorm } = useAppContext();
+  const { liveHurdat, liveStormId, setLiveStormId } = useAppContext();
 
   // Group storms by STORM_ID
   const stormGroups: { [key: string]: any[] } = {};
@@ -314,13 +314,13 @@ const LiveTracker = () => {
         const movementSpeed = calculateMovementSpeed(currentPosition, previousPosition);
         const movementDirection = calculateMovementDirection(currentPosition, previousPosition);
         
-        const isSelected = stormId === selectedLiveStorm;
+        const isSelected = stormId === liveStormId;
         return (
           <div 
             key={stormId} 
             className={`live-storm-card ${isSelected ? 'selected' : ''}`}
             style={{ borderLeft: `4px solid ${color}` }}
-            onClick={() => selectLiveStorm(stormId)}
+            onClick={() => setLiveStormId(stormId)}
           >
             <ul className='data-table'>
               {/* Storm Header */}
