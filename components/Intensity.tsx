@@ -7,17 +7,10 @@ import { Line } from 'react-chartjs-2';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
-const Intensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
+const Intensity = ({onClick, expand}: {onClick: () => void, expand: boolean}) => {
   const { storm, dates } = useAppContext();
   const [wind, setWind] = useState<number[]>([]);
   const [pressure, setPressure] = useState<(number | null)[]>([]);
-
-  const onClick = () => {
-    if (window.innerWidth >= 480) {
-      return
-    } 
-    toggleChart()
-  };
 
   useEffect(() => {
     if (!storm) return;
@@ -112,8 +105,8 @@ const Intensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: 
   };
 
   return (
-    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
-      <div className={expanded ? "chart-expanded" : "chart"}>
+    <div className={expand ? "chart-expand-wrapper" : "chart-wrapper"}>
+      <div className={expand ? "chart-expand" : "chart"}>
         <Line options={options} data={data} onClick={onClick}/>
       </div>
     </div>

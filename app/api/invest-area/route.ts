@@ -24,9 +24,9 @@ export async function GET() {
     return nextResponse;
     
   } catch (error) {
-    console.error('Error fetching areas of interest data:', error);
+    console.error('Error fetching invest data:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch areas of interest data' },
+      { error: 'Failed to fetch invest data' },
       { status: 500 }
     );
   }

@@ -1,14 +1,12 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { getHurdat, getLiveHurdat, getForecastCone, getAreasOfInterest, getPointsOfInterest } from "../libs/hurdat";
+import dynamic from 'next/dynamic';
+import { getArchive, getLive, getCone, getInvestArea, getInvest } from "../libs/hurdat";
 import { sum } from "../libs/sum";
 import { AppProvider } from "../contexts/AppContext";
 import Interface from "../components/Interface";
-import dynamic from 'next/dynamic';
-
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
-// Using public folder images directly
 import ArchiveCharts from "../components/ArchiveCharts";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -32,10 +30,9 @@ export default function Home() {
   const [liveHurdat, setLiveHurdat] = useState<any[]>([]);
   const [forecastCone, setForecastCone] = useState<any[]>([]);
   const [tracker, setTracker] = useState<boolean>(false);
-  const [windFieldForecast, setWindFieldForecast] = useState<any[]>([]);
-  const [areasOfInterest, setAreasOfInterest] = useState<any[]>([]);
+  const [investAreas, setinvestAreas] = useState<any[]>([]);
   const [selectedLiveStorm, setSelectedLiveStorm] = useState<string | null>(null);
-  const [pointsOfInterest, setPointsOfInterest] = useState<any[]>([]);
+  const [invests, setInvests] = useState<any[]>([]);
   const [clickedPoint, setClickedPoint] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
@@ -48,18 +45,17 @@ export default function Home() {
         });
       });
     }
-    getLiveHurdat().then(data => {
-      // Data structure from tropical-TJ: { storms: [], stormCount: 0, lastUpdated: '' }
+    getLive().then(data => {
       setLiveHurdat(data || []);
     });
-    getForecastCone().then(data => {
+    getCone().then(data => {
       setForecastCone(data || []);
     });  
-    getAreasOfInterest().then(data => {
-      setAreasOfInterest(data || []);
+    getInvestArea().then(data => {
+      setinvestAreas(data || []);
     });
-    getPointsOfInterest().then(data => {
-      setPointsOfInterest(data || []);
+    getInvest().then(data => {
+      setInvests(data || []);
     });
   }, []);
 
@@ -74,7 +70,7 @@ export default function Home() {
       } else {
         setSeason(null);
         setStorm(null);
-        getHurdat(basin, year).then(data => {
+        getArchive(basin, year).then(data => {
           if (data) {
             setSeason(data);
             if (data[0]) {
@@ -364,14 +360,13 @@ export default function Home() {
     forecastCone,
     toggleTracker,
     tracker,
-    windFieldForecast,
     toggleCharts,
     map,
-    areasOfInterest,
-    setAreasOfInterest,
+    investAreas,
+    setinvestAreas,
     selectedLiveStorm,
     selectLiveStorm,
-    pointsOfInterest,
+    invests,
     clickedPoint,
     selectArchivedStormPoint,
     selectLiveStormPoint

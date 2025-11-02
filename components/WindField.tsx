@@ -2,13 +2,14 @@
 
 import { useAppContext } from '../contexts/AppContext';
 import { Polygon, Popup } from 'react-leaflet';
+import type { LatLngExpression } from 'leaflet';
 
 const WindField = () => {
   const { storm, year } = useAppContext();
 
   const nmToDeg = (nm: number) => nm / 60;
 
-  const calculatePoints = (lat: number, lng: number, points: number[][], radii?: { ne: number; se: number; sw: number; nw: number }) => {
+  const calculatePoints = (lat: number, lng: number, points: [number, number][], radii?: { ne: number; se: number; sw: number; nw: number }) => {
     let { ne = 0, se = 0, sw = 0, nw = 0 } = radii || {};
     let radius: number;
     for (let angle = 0; angle < 360; angle += 2) {
@@ -27,11 +28,11 @@ const WindField = () => {
 
   const windField34kt = storm.data.map((point, i) => {
     const { lat, lng } = point;
-    const points34kt: number[][] = [];  
+    const points34kt: [number, number][] = [];  
     calculatePoints(lat, lng, points34kt, point['34kt_wind_nm']);
     return (
       <div key={i}>
-        <Polygon positions={points34kt} color="yellow" weight={2}>
+        <Polygon positions={points34kt as LatLngExpression[]} color="yellow" weight={2}>
           <Popup className="font-bold">
             <h1 className="text-md">{'Wind: ≥34 kt'}</h1>
           </Popup>
@@ -42,11 +43,11 @@ const WindField = () => {
 
   const windField50kt = storm.data.map((point, i) => {
     const { lat, lng } = point;
-    const points50kt: number[][] = [];  
+    const points50kt: [number, number][] = [];  
     calculatePoints(lat, lng, points50kt, point['50kt_wind_nm']);
     return (
       <div key={i}>
-        <Polygon positions={points50kt} color="orange" weight={2}>
+        <Polygon positions={points50kt as LatLngExpression[]} color="orange" weight={2}>
           <Popup className="font-bold">
             <h1 className="text-md">{'Wind: ≥50 kt'}</h1>
           </Popup>
@@ -57,11 +58,11 @@ const WindField = () => {
 
   const windField64kt = storm.data.map((point, i) => {
     const { lat, lng } = point;
-    const points64kt: number[][] = [];  
+    const points64kt: [number, number][] = [];  
     calculatePoints(lat, lng, points64kt, point['64kt_wind_nm']);
     return (
       <div key={i}>
-        <Polygon positions={points64kt} color="red" weight={2}>
+        <Polygon positions={points64kt as LatLngExpression[]} color="red" weight={2}>
           <Popup className="font-bold">
             <h1 className="text-md">{'Wind: ≥64 kt'}</h1>
           </Popup>

@@ -1,22 +1,13 @@
 'use client';
 
-import { useRef, useState } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Line } from 'react-chartjs-2';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
-const AceTike = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
+const AceTike = ({onClick, expand}: {onClick: () => void, expand: boolean}) => {
   const { dates, ACEArray, TIKEArray, year } = useAppContext();
-  
-  const onClick = () => {
-    if (window.innerWidth >= 480) {
-      return
-    } 
-    toggleChart()
-  };
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -120,8 +111,8 @@ const AceTike = ({toggleChart, expanded}: {toggleChart: () => void, expanded: bo
   };
 
   return (
-    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
-      <div className={expanded ? "chart-expanded" : "chart"}>
+    <div className={expand ? "chart-expand-wrapper" : "chart-wrapper"}>
+      <div className={expand ? "chart-expand" : "chart"}>
         <Line options={options} data={data} onClick={onClick} />
       </div>
     </div>

@@ -29,14 +29,13 @@ interface AppContextType {
   forecastCone: GeoJSONFeature[];
   toggleTracker: () => void;
   tracker: boolean;
-  windFieldForecast: GeoJSONFeature[];
   toggleCharts: () => void;
   map: boolean;
-  areasOfInterest: GeoJSONFeature[];
-  setAreasOfInterest: (areas: GeoJSONFeature[]) => void;
+  investAreas: GeoJSONFeature[];
+  setinvestAreas: (areas: GeoJSONFeature[]) => void;
   selectedLiveStorm: string | null;
   selectLiveStorm: (stormId: string) => void;
-  pointsOfInterest: GeoJSONFeature[];
+  invests: GeoJSONFeature[];
   clickedPoint: { lat: number; lng: number } | null;
   selectArchivedStormPoint: (stormId: string, lat: number, lng: number) => void;
   selectLiveStormPoint: (stormId: string, lat: number, lng: number) => void;

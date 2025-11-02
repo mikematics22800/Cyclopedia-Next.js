@@ -7,16 +7,9 @@ import { useAppContext } from '../contexts/AppContext';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
-const SeasonIntensity = ({toggleChart, expanded}: {toggleChart: () => void, expanded: boolean}) => {
+const SeasonIntensity = ({onClick, expand}: {onClick: () => void, expand: boolean}) => {
   const { names, maxWinds, season } = useAppContext();
   const [minPressures, setMinPressures] = useState<number[]>([]);
-
-  const onClick = () => {
-    if (window.innerWidth >= 480) {
-      return
-    } 
-    toggleChart()
-  };
 
   useEffect(() => {
     if (!season) return;
@@ -108,8 +101,8 @@ const SeasonIntensity = ({toggleChart, expanded}: {toggleChart: () => void, expa
   };
 
   return (
-    <div className={expanded ? "chart-expanded-wrapper" : "chart-wrapper"}>
-      <div className={expanded ? "chart-expanded" : "chart"}>
+    <div className={expand ? "chart-expand-wrapper" : "chart-wrapper"}>
+      <div className={expand ? "chart-expand" : "chart"}>
         <Bar options={options} data={data} onClick={onClick}/>
       </div>
     </div>

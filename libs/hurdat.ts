@@ -52,7 +52,7 @@ const options: FetchOptions = {
   }
 };
 
-export const getHurdat = async (basin: string, year: number): Promise<Storm[] | undefined> => {
+export const getArchive = async (basin: string, year: number): Promise<Storm[] | undefined> => {
   try {
     const response = await fetch(`/api/archive/${basin}/${year}`, options);
     if (!response.ok) {
@@ -65,9 +65,9 @@ export const getHurdat = async (basin: string, year: number): Promise<Storm[] | 
   }
 };
 
-export const getLiveHurdat = async (): Promise<GeoJSONFeature[] | undefined> => {
+export const getLive = async (): Promise<GeoJSONFeature[] | undefined> => {
   try {
-    const response = await fetch('/api/live-hurdat', options);
+    const response = await fetch('/api/live', options);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -78,9 +78,9 @@ export const getLiveHurdat = async (): Promise<GeoJSONFeature[] | undefined> => 
   }
 };
 
-export const getForecastCone = async (): Promise<GeoJSONFeature[] | undefined> => {
+export const getCone = async (): Promise<GeoJSONFeature[] | undefined> => {
   try {
-    const response = await fetch('/api/forecast-cone', options);
+    const response = await fetch('/api/cone', options);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -91,9 +91,9 @@ export const getForecastCone = async (): Promise<GeoJSONFeature[] | undefined> =
   }
 };
 
-export const getWindField = async (): Promise<GeoJSONFeature[] | undefined> => {
+export const getInvestArea = async (): Promise<GeoJSONFeature[] | undefined> => {
   try {
-    const response = await fetch('/api/wind-field', options);
+    const response = await fetch('/api/invest-area', options);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -104,22 +104,9 @@ export const getWindField = async (): Promise<GeoJSONFeature[] | undefined> => {
   }
 };
 
-export const getAreasOfInterest = async (): Promise<GeoJSONFeature[] | undefined> => {
+export const getInvest = async (): Promise<GeoJSONFeature[] | undefined> => {
   try {
-    const response = await fetch('/api/areas-of-interest', options);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data: GeoJSONResponse = await response.json();
-    return data.features;
-  } catch (err) {
-    console.error('Server error', err);
-  }
-};
-
-export const getPointsOfInterest = async (): Promise<GeoJSONFeature[] | undefined> => {
-  try {
-    const response = await fetch('/api/points-of-interest', options);
+    const response = await fetch('/api/invest', options);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

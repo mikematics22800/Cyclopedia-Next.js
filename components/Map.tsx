@@ -9,8 +9,8 @@ import LiveStorms from "./LiveStorms";
 import WindField from "./WindField";
 import Legend from "./Legend";
 import ClimateLayers from "./ClimateLayers";
-import AreasOfInterest from "./AreasOfInterest";
-import PointsOfInterest from "./PointsOfInterest";
+import InvestAreas from "./InvestAreas";
+import Invests from "./Invests";
 import MapController from "./MapController";
 
 interface WeatherLayers {
@@ -65,8 +65,8 @@ const Map = () => {
         {/* Storm Layers */}
         {tracker ? <LiveStorms /> : <ArchivedStorms />}
         {year >= 2004 && windField && !tracker && <WindField/>}
-        {tracker && <AreasOfInterest />}
-        {tracker && <PointsOfInterest />}
+        {tracker && <InvestAreas />}
+        {tracker && <Invests />}
         <MapController />
       </MapContainer>
     </div>

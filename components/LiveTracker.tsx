@@ -300,6 +300,7 @@ const LiveTracker = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full data-rows-center">
+      {(Object.entries(stormGroups).length === 0) && <h1 className='text-white text-center font-bold'>No tropical cyclones in the Atlantic and Pacific basin at this time.</h1>}
       {Object.entries(stormGroups).map(([stormId, points]) => {
         const currentPosition = findCurrentPosition(points);
         
