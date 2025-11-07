@@ -85,10 +85,10 @@ nav {
 
 /* Mobile chart toggle styles - only on mobile devices */
 @media (max-width: 480px) {
-  .chart-expanded {
+  .chart-expand {
     @apply chart !rounded-none
   }
-  .chart-expanded-wrapper {
+  .chart-expand-wrapper {
     @apply w-[100vh] h-[100vw] rotate-90 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-cover bg-center bg-no-repeat;
     background-image: url('/hurricane.jpg');
   }
