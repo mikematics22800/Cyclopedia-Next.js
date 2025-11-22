@@ -56,7 +56,7 @@ const Interface = () => {
               })}
             </Select>
           </div>
-          {year >= 2004 && (
+          {year >= 2004 && stormId !== 'season' && (
             <div className="flex items-center gap-1">
               <Checkbox className="!text-white !p-0" onChange={(e) => {setWindField(e.target.checked)}}/>
               <h1 className="text-white font-bold">Wind Field</h1>
