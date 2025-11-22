@@ -4,11 +4,12 @@ import { useMemo } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import StormArchive from "./StormArchive";
 import SeasonArchive from "./SeasonArchive";
-import Charts from "./ArchiveCharts";
+import ArchiveCharts from "./ArchiveCharts";
 import LiveTracker from "./LiveTracker";
 import { MenuItem, Select, Checkbox } from "@mui/material"
 
 const Interface = () => {
+
   const { 
     basin, 
     setBasin, 
@@ -48,6 +49,7 @@ const Interface = () => {
               })}
             </Select>
             <Select className="select" value={stormId} onChange={(e) => {setStormId(e.target.value)}}>
+              <MenuItem value={'season'}><p className="text-black font-bold">Season</p></MenuItem>
               {stormIds?.map((id) => {
                 const name = id.split('_')[1]
                 return (<MenuItem key={id} value={id}><p className="text-black font-bold">{name}</p></MenuItem>);
@@ -60,14 +62,13 @@ const Interface = () => {
               <h1 className="text-white font-bold">Wind Field</h1>
             </div>
           )}
-          <SeasonArchive/>
-          <StormArchive/>
+          {stormId === 'season' ? <SeasonArchive/> : <StormArchive/>}
         </>
       )}
       {tracker && <LiveTracker />}
       {!tracker && (
         <div className="sm:hidden w-full">
-          <Charts/>
+          <ArchiveCharts stormId={stormId}/>
         </div>
       )}
     </div>

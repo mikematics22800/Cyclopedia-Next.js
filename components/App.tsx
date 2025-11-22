@@ -16,7 +16,7 @@ export default function App() {
   const [year, setYear] = useState<number>(2024);
   const [season, setSeason] = useState<any[] | null>(null);
   const [storm, setStorm] = useState<any | null>(null);
-  const [stormId, setStormId] = useState<string>('');
+  const [stormId, setStormId] = useState<string>('season');
   const [dates, setDates] = useState<string[]>([]);
   const [windField, setWindField] = useState<boolean>(false);
   const [names, setNames] = useState<string[]>([]);
@@ -47,22 +47,19 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    setStormId('season');
     if (year < 1949 && basin === 'pac') setYear(1949);
     if (typeof window !== 'undefined') {
       const cache = localStorage.getItem(`cyclopedia-${basin}-${year}`);
       if (cache) {
         setSeason(JSON.parse(cache));
         const data = JSON.parse(cache);
-        setStormId(data[0].id);
       } else {
         setSeason(null);
         setStorm(null);
         getArchive(basin, year).then(data => {
           if (data) {
             setSeason(data);
-            if (data[0]) {
-              setStormId(data[0].id);
-            }
             localStorage.setItem(`cyclopedia-${basin}-${year}`, JSON.stringify(data));
           }
         });
@@ -71,14 +68,16 @@ export default function App() {
   }, [basin, year]);
 
   useEffect(() => {
-    if (season) {
+    if (season && stormId !== 'season') {
       const storm = season.find(storm => storm.id === stormId);
       setStorm(storm);
+    } else if (stormId === 'season') {
+      setStorm(null);
     }
   }, [stormId, season]);
 
   useEffect(() => {
-    if (storm) {
+    if (storm && stormId !== 'season') {
       const dates = storm.data.map((point: any) => {
         const dateArray = point?.date.toString().split("");
         const month = dateArray.slice(4,6).join("");
@@ -86,8 +85,10 @@ export default function App() {
         return `${month}/${day}`;
       });
       setDates(dates);
+    } else if (stormId === 'season') {
+      setDates([]);
     }
-  }, [storm, year]);
+  }, [storm, year, stormId]);
 
   useEffect(() => {
     if (season) {
@@ -126,39 +127,6 @@ export default function App() {
         return ACE;
       });
       setSeasonACE(seasonACE);
-
-      // Calculate season TIKE if year >= 2004
-      if (year >= 2004) {
-        const seasonTIKE = season.map((storm) => {
-          let cumulativeTIKE = 0;
-          storm.data.forEach((point: any) => {
-            if (point['34kt_wind_nm'] && point['50kt_wind_nm'] && point['64kt_wind_nm']) {
-              const wind34 = point['34kt_wind_nm'];
-              const wind50 = point['50kt_wind_nm'];
-              const wind64 = point['64kt_wind_nm'];
-              
-              const area34 = Math.PI * Math.pow((wind34.ne + wind34.se + wind34.sw + wind34.nw) / 4 * 1852, 2);
-              const area50 = Math.PI * Math.pow((wind50.ne + wind50.se + wind50.sw + wind50.nw) / 4 * 1852, 2);
-              const area64 = Math.PI * Math.pow((wind64.ne + wind64.se + wind64.sw + wind64.nw) / 4 * 1852, 2);
-              
-              const rho = 1.15;
-              const v34 = 34 * 0.514444;
-              const v50 = 50 * 0.514444;
-              const v64 = 64 * 0.514444;
-              
-              const ke34 = 0.5 * rho * Math.pow(v34, 2) * area34;
-              const ke50 = 0.5 * rho * Math.pow(v50, 2) * area50;
-              const ke64 = 0.5 * rho * Math.pow(v64, 2) * area64;
-              
-              const totalKE = ke34 + ke50 + ke64;
-              const totalKETJ = totalKE / 1e12;
-              
-              cumulativeTIKE += totalKETJ;
-            }
-          });
-          return cumulativeTIKE;
-        });
-      }
     }
   }, [season, year]);
 
@@ -215,7 +183,7 @@ export default function App() {
   return (
     <AppProvider value={value}>
       <div className="app app-background">
-        {season && storm ? (
+        {season && (stormId === 'season' || storm) ? (
           <>
             <nav>
               <div className="flex items-center">
@@ -233,7 +201,7 @@ export default function App() {
             </nav>
             <div className="desktop-view">
               <Interface/>
-              {map ? <Map/> : tracker ? <Map/> : <ArchiveCharts/>}
+              {map ? <Map/> : tracker ? <Map/> : <ArchiveCharts stormId={stormId}/>}
             </div>
             <div className="mobile-map">
               <Map/>

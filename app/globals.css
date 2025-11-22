@@ -28,7 +28,7 @@ nav {
 }
 
 .loading-screen img {
-  @apply sm:w-60 w-40 animate-spin
+  @apply sm:w-60 w-40 spin
 }
 
 .interface {
@@ -81,6 +81,16 @@ nav {
 
 .chart-wrapper {
   @apply h-64 sm:h-96 w-full
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 2s linear infinite;
 }
 
 /* Mobile chart toggle styles - only on mobile devices */
@@ -164,18 +174,6 @@ ul li h2 {
 
 .label {
   @apply text-sm font-semibold
-}
-
-.map-loader {
-  @apply absolute inset-0 flex flex-col gap-4 items-center justify-center min-h-[400px] w-full h-full z-[10000] bg-black bg-opacity-50 backdrop-blur-sm
-}
-
-.map-loader-icon {
-  @apply animate-spin h-16 w-16
-}
-
-.map-loader-text {
-  @apply text-xl font-semibold text-white
 }
 
 .map-controls-container {

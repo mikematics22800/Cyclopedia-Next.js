@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -59,11 +60,8 @@ export default function InstallPrompt() {
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:max-w-md bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <div className="text-2xl">⚡</div>
-        <div>
-          <p className="font-semibold">Install Cyclopedia</p>
-          <p className="text-sm text-blue-100">Add to home screen for quick access</p>
-        </div>
+        <Image src="/cyclone.png" width={32} height={32} alt="logo"/>
+        <p className="font-semibold">Download the App!</p>
       </div>
       <div className="flex gap-2">
         <button

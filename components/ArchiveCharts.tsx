@@ -7,7 +7,7 @@ const AceTike = dynamic(() => import("./AceTike"), { ssr: false });
 const SeasonIntensity = dynamic(() => import("./SeasonIntensity"), { ssr: false });
 const SeasonAceTike = dynamic(() => import("./SeasonAceTike"), { ssr: false });
 
-const ArchiveCharts = () => {
+const ArchiveCharts = ({stormId}: {stormId: string}) => {
   const [expandIntensity, setExpandIntensity] = useState(false);
   const [expandAceTike, setExpandAceTike] = useState(false);
   const [expandSeasonIntensity, setExpandSeasonIntensity] = useState(false);
@@ -31,11 +31,18 @@ const ArchiveCharts = () => {
   return (
     <div className="charts-container">
       <div className="charts">
-        <Intensity onClick={() => toggleExpand('intensity')} expand={expandIntensity}/>
-        <AceTike onClick={() => toggleExpand('aceTike')} expand={expandAceTike}/>
-        <SeasonIntensity onClick={() => toggleExpand('seasonIntensity')} expand={expandSeasonIntensity}/>
-        <SeasonAceTike onClick={() => toggleExpand('seasonAceTike')} expand={expandSeasonAceTike}/>
-      </div>
+        {stormId==='season' ? 
+          <>        
+            <SeasonIntensity onClick={() => toggleExpand('seasonIntensity')} expand={expandSeasonIntensity}/>
+            <SeasonAceTike onClick={() => toggleExpand('seasonAceTike')} expand={expandSeasonAceTike}/>
+          </>  
+        :
+          <>
+            <Intensity onClick={() => toggleExpand('intensity')} expand={expandIntensity}/>
+            <AceTike onClick={() => toggleExpand('aceTike')} expand={expandAceTike}/>
+          </>
+        }
+        </div>
     </div>
   );
 };
