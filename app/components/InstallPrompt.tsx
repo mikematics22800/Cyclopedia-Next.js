@@ -58,7 +58,7 @@ export default function InstallPrompt() {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:max-w-md bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50 flex items-center justify-between gap-4">
+    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:max-w-md bg-blue-600 text-white p-4 rounded-lg shadow-lg z-[999] flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <Image src="/cyclone.png" width={32} height={32} alt="logo" priority unoptimized />
         <p className="font-semibold">Download the App!</p>
