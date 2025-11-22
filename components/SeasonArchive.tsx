@@ -5,13 +5,14 @@ import { useAppContext } from '../contexts/AppContext';
 import { sum } from '../libs/sum';
 
 const SeasonArchive = () => {
-  const { season, seasonACE, maxWinds, year } = useAppContext();
+  const { season, seasonACE, maxWinds, year, basin } = useAppContext();
 
   const [hurricanes, setHurricanes] = useState<number>(0);
   const [majorHurricanes, setMajorHurricanes] = useState<number>(0);
   const [deadOrMissing, setDeadOrMissing] = useState<number>(0);
   const [cost, setCost] = useState<string>('0');
   const [seasonTIKE, setSeasonTIKE] = useState<number>(0);
+  const [duration, setDuration] = useState<string>('');
 
   useEffect(() => {
     if (!season) return;
@@ -64,9 +65,22 @@ const SeasonArchive = () => {
       const totalSeasonTIKE = sum(seasonTIKE);
       setSeasonTIKE(totalSeasonTIKE);
     }
+    const startArray = season[0].data[0].date.toString().split('');
+    const startYear = startArray.slice(0,4).join('');
+    const startMonth = parseInt(startArray.slice(4,6).join(''));
+    const startDay = parseInt(startArray.slice(-2).join(''));
+    const startDate = `${startMonth}/${startDay}/${startYear}`;
+    const endArray = season[season.length - 1].data[season[season.length - 1].data.length - 1].date.toString().split('');    
+    const endYear = endArray.slice(0,4).join('');
+    const endMonth = parseInt(endArray.slice(4,6).join(''));
+    const endDay = parseInt(endArray.slice(-2).join(''));
+    const endDate = `${endMonth}/${endDay}/${endYear}`;
+    const duration = `${startDate}-${endDate}`;
+    setDuration(duration);
   }, [season, year]);
 
   if (!season) return null;
+
 
   return (
     <div className='season'>
@@ -74,7 +88,8 @@ const SeasonArchive = () => {
         <ul className='data-table bg-gray-800'>
           {/* Season Header */}
           <li className='header'>
-            <h1 className='title'>Season Metrics</h1>     
+            <h1 className='title'>{basin === 'atl' ? 'Atlantic' : 'Pacific'} Basin</h1>     
+            <h1>{duration}</h1>
           </li>
           
           {/* Storm Counts */}
