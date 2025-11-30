@@ -37,11 +37,11 @@ const ClimateLayers = ({ layers, setLayers }: { layers: Layers, setLayers: Dispa
 
   return (
     <>
-      {open ? (
+      {!open ? (
         <div className="flex flex-col gap-2 font-bold text-white bg-black bg-opacity-50 rounded-lg w-fit p-2 cursor-pointer">
           <Tooltip title="Climate Layers" placement="bottom" arrow>
             <IconButton 
-              onClick={() => setOpen(false)}
+              onClick={() => setOpen(true)}
               sx={{ 
                 padding: 0,
                 '&:hover': { 
@@ -62,7 +62,7 @@ const ClimateLayers = ({ layers, setLayers }: { layers: Layers, setLayers: Dispa
                 control={<Checkbox className="!text-white" checked={layers.clouds} onChange={(e) => handleChange('clouds', e.target.checked)}/>} 
                 label="Clouds" 
               />
-              <IconButton onClick={() => setOpen(true)}>
+              <IconButton onClick={() => setOpen(false)}>
                 <Close className="text-white"/>
               </IconButton>
             </div>

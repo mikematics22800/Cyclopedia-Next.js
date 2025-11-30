@@ -1,7 +1,6 @@
 import "./globals.css";
 import localFont from "next/font/local";
 import ServiceWorkerRegister from "./components/ServiceWorkerRegister";
-import InstallPrompt from "./components/InstallPrompt";
 
 const stormFont = localFont({
   src: "../public/storm.ttf",
@@ -39,7 +38,6 @@ export default function RootLayout({
       </head>
       <body>
         <ServiceWorkerRegister />
-        <InstallPrompt />
         {children}
       </body>
     </html>
