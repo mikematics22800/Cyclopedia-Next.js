@@ -28,14 +28,15 @@ const aceThresholdLinePlugin: Plugin<'line'> = {
     );
     if (aceDatasetIndex === -1 || !chart.isDatasetVisible(aceDatasetIndex)) return;
 
-    const yScale = chart.scales.y;
-    if (!yScale) return;
+    const isMobile = chart.options.indexAxis === 'y';
+    const valueScale = isMobile ? chart.scales.x : chart.scales.y;
+    if (!valueScale) return;
 
-    const thresholdPixel = yScale.getPixelForValue(100);
-    const zeroPixel = yScale.getPixelForValue(0);
+    const thresholdPixel = valueScale.getPixelForValue(100);
+    const zeroPixel = valueScale.getPixelForValue(0);
     if (!Number.isFinite(thresholdPixel) || !Number.isFinite(zeroPixel)) return;
 
-    const { left, right } = chart.chartArea;
+    const { left, right, top, bottom } = chart.chartArea;
     const rangeStart = Math.min(zeroPixel, thresholdPixel);
     const rangeEnd = Math.max(zeroPixel, thresholdPixel);
     const { ctx } = chart;
@@ -43,10 +44,17 @@ const aceThresholdLinePlugin: Plugin<'line'> = {
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'purple';
-    ctx.moveTo(left, rangeStart);
-    ctx.lineTo(left, rangeEnd);
-    ctx.moveTo(left, thresholdPixel);
-    ctx.lineTo(right, thresholdPixel);
+    if (isMobile) {
+      ctx.moveTo(rangeStart, top);
+      ctx.lineTo(rangeEnd, top);
+      ctx.moveTo(thresholdPixel, top);
+      ctx.lineTo(thresholdPixel, bottom);
+    } else {
+      ctx.moveTo(left, rangeStart);
+      ctx.lineTo(left, rangeEnd);
+      ctx.moveTo(left, thresholdPixel);
+      ctx.lineTo(right, thresholdPixel);
+    }
     ctx.stroke();
     ctx.restore();
   },
@@ -61,6 +69,11 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
   const [wind, setWind] = useState<(number | null)[]>([]);
   const [pressure, setPressure] = useState<(number | null)[]>([]);
   const [aceSeries, setAceSeries] = useState<number[]>([]);
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    setMobile(window.innerWidth < 480);
+  }, []);
 
   useEffect(() => {
     if (!storm) return;
@@ -78,13 +91,20 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
 
   if (!storm) return null;
 
+  const primaryAxes = mobile
+    ? { xAxisID: 'x' as const, yAxisID: 'y' as const }
+    : { yAxisID: 'y' as const };
+  const secondaryAxes = mobile
+    ? { xAxisID: 'x1' as const, yAxisID: 'y' as const }
+    : { yAxisID: 'y1' as const };
+
   const datasets = [
     {
       label: 'Maximum Wind (kt)',
       data: wind,
       borderColor: 'red',
       backgroundColor: 'pink',
-      yAxisID: 'y' as const,
+      ...primaryAxes,
       hidden: hiddenByDatasetIndex[0] ?? false,
     },
     {
@@ -92,7 +112,7 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
       data: pressure,
       borderColor: 'blue',
       backgroundColor: 'lightblue',
-      yAxisID: 'y1' as const,
+      ...secondaryAxes,
       hidden: hiddenByDatasetIndex[1] ?? false,
     },
     {
@@ -102,14 +122,98 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
       backgroundColor: 'rgba(168, 85, 247, 0.25)',
       pointBackgroundColor: '#e9d5ff',
       pointBorderColor: 'rgba(168, 85, 247, 0.45)',
-      yAxisID: 'y' as const,
+      ...primaryAxes,
       hidden: hiddenByDatasetIndex[2] ?? false,
     },
   ];
 
   const data = { labels: dates, datasets };
 
+  const desktopScales = {
+    y: {
+      type: 'linear' as const,
+      display: true,
+      position: 'left' as const,
+      ticks: {
+        color: 'white',
+        stepSize: 50,
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.22)',
+      },
+      min: 0,
+      max: 200,
+    },
+    y1: {
+      type: 'linear' as const,
+      display: true,
+      position: 'right' as const,
+      reverse: true,
+      ticks: {
+        color: 'white',
+        stepSize: 50,
+      },
+      min: 850,
+      max: 1050,
+      grid: {
+        drawOnChartArea: false,
+      },
+    },
+    x: {
+        ticks: {
+        color: 'white',
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.22)',
+      },
+    },
+  };
+
+  const mobileScales = {
+    x: {
+      type: 'linear' as const,
+      display: true,
+      position: 'top' as const,
+      ticks: {
+        color: 'white',
+        stepSize: 50,
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.22)',
+      },
+      min: 0,
+      max: 200,
+    },
+    y: {
+      type: 'category' as const,
+      display: true,
+      position: 'left' as const,
+        ticks: {
+        color: 'white',
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 0.22)',
+      },
+    },
+    x1: {
+      type: 'linear' as const,
+      display: true,
+      position: 'bottom' as const,
+      reverse: true,
+      min: 850,
+      max: 1050,
+      ticks: {
+        color: 'white',
+        stepSize: 50,
+      },
+      grid: {
+        drawOnChartArea: false,
+      },
+    },
+  };
+
   const options = {
+    indexAxis: (mobile ? 'y' : 'x') as 'x' | 'y',
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
@@ -130,7 +234,7 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
         callbacks: {
           label: function (context: TooltipItem<'line'>) {
             const label = context.dataset.label || '';
-            const v = context.parsed.y;
+            const v = mobile ? context.parsed.x : context.parsed.y;
             if (v == null) return label;
             if (label === 'Accumulated Cyclone Energy') {
               return `${label}: ${v.toFixed(1)}`;
@@ -146,49 +250,11 @@ const StormChart = ({ hiddenByDatasetIndex = {} }: StormChartProps) => {
         },
       },
     },
-    scales: {
-      y: {
-        type: 'linear' as const,
-        display: true,
-        position: 'left' as const,
-        ticks: {
-          color: 'white',
-          stepSize: 50,
-        },
-        grid: {
-          color: 'rgba(255, 255, 255, 0.22)',
-        },
-        min: 0,
-        max: 200,
-      },
-      y1: {
-        type: 'linear' as const,
-        display: true,
-        position: 'right' as const,
-        reverse: true,
-        ticks: {
-          color: 'white',
-          stepSize: 50,
-        },
-        min: 850,
-        max: 1050,
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-      x: {
-        ticks: {
-          color: 'white',
-        },
-        grid: {
-          color: 'rgba(255, 255, 255, 0.22)',
-        },
-      },
-    },
+    scales: !mobile ? desktopScales : mobileScales,
   };
 
   return (
-    <div className="relative w-full min-h-0 lg:h-96 h-64">
+    <div className="relative h-[48rem] lg:h-96 w-full min-h-0">
       <Line options={options} data={data} plugins={[aceThresholdLinePlugin]} />
     </div>
   );

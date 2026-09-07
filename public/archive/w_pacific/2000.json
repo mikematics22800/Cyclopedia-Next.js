@@ -1,6 +1,6 @@
 [
   {
-    "id": "WP012000_Unnamed",
+    "id": "WP012000_Damrey",
     "dead_or_missing": 0,
     "cost_usd": 0,
     "retired": false,
@@ -368,7 +368,7 @@
     ]
   },
   {
-    "id": "WP022000_Unnamed",
+    "id": "WP022000_Longwang",
     "dead_or_missing": 0,
     "cost_usd": 0,
     "retired": false,
@@ -702,9 +702,9 @@
     ]
   },
   {
-    "id": "WP052000_Unnamed",
-    "dead_or_missing": 0,
-    "cost_usd": 0,
+    "id": "WP052000_Kirogi",
+    "dead_or_missing": 3,
+    "cost_usd": 505000000,
     "retired": false,
     "data": [
       {

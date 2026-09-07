@@ -69,20 +69,26 @@ const selectedYearLinePlugin: Plugin<'line'> = {
         ?.selectedYearLine?.selectedIndex ?? -1;
     if (selectedYearIndex < 0) return;
 
-    const xScale = chart.scales.x;
-    const { top, bottom } = chart.chartArea;
-    if (!xScale || bottom <= top) return;
+    const isMobile = chart.options.indexAxis === 'y';
+    const categoryScale = isMobile ? chart.scales.y : chart.scales.x;
+    const { left, right, top, bottom } = chart.chartArea;
+    if (!categoryScale || bottom <= top) return;
 
-    const xPixel = xScale.getPixelForValue(selectedYearIndex);
-    if (!Number.isFinite(xPixel)) return;
+    const pixel = categoryScale.getPixelForValue(selectedYearIndex);
+    if (!Number.isFinite(pixel)) return;
 
     const { ctx } = chart;
     ctx.save();
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'aqua';
-    ctx.moveTo(xPixel, top);
-    ctx.lineTo(xPixel, bottom);
+    if (isMobile) {
+      ctx.moveTo(left, pixel);
+      ctx.lineTo(right, pixel);
+    } else {
+      ctx.moveTo(pixel, top);
+      ctx.lineTo(pixel, bottom);
+    }
     ctx.stroke();
     ctx.restore();
   },
@@ -91,6 +97,11 @@ const selectedYearLinePlugin: Plugin<'line'> = {
 const TotalsChart = ({ totals }: TotalsChartProps) => {
   const { basin, year } = useAppContext();
   const [showCyclones, setShowCyclones] = useState(true);
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    setMobile(window.innerWidth < 480);
+  }, []);
 
   useEffect(() => {
     setShowCyclones(true);
@@ -109,8 +120,15 @@ const TotalsChart = ({ totals }: TotalsChartProps) => {
     [chartTotals, year],
   );
 
-  const chartData = useMemo(
-    () => ({
+  const chartData = useMemo(() => {
+    const primaryAxes = mobile
+      ? { xAxisID: 'x' as const, yAxisID: 'y' as const }
+      : { yAxisID: 'y' as const };
+    const secondaryAxes = mobile
+      ? { xAxisID: 'x1' as const, yAxisID: 'y' as const }
+      : { yAxisID: 'y1' as const };
+
+    return {
       labels: chartTotals.map((entry) => String(entry.year)),
       datasets: [
         {
@@ -119,7 +137,7 @@ const TotalsChart = ({ totals }: TotalsChartProps) => {
           borderColor: 'red',
           backgroundColor: 'pink',
           ...pointHighlightColors(chartTotals.length, selectedYearIndex, 'pink', 'red'),
-          yAxisID: 'y' as const,
+          ...primaryAxes,
         },
         {
           label: 'Accumulated Cyclone Energy',
@@ -134,15 +152,97 @@ const TotalsChart = ({ totals }: TotalsChartProps) => {
             '#e9d5ff',
             'rgba(168, 85, 247, 0.45)',
           ),
-          yAxisID: 'y1' as const,
+          ...secondaryAxes,
         },
       ],
-    }),
-    [chartTotals, selectedYearIndex, basin],
-  );
+    };
+  }, [chartTotals, selectedYearIndex, basin, mobile]);
 
-  const options = useMemo(
-    () => ({
+  const options = useMemo(() => {
+    const desktopScales = {
+      x: {
+        type: 'category' as const,
+        ticks: {
+          color: 'white',
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.22)',
+        },
+      },
+      y: {
+        type: 'linear' as const,
+        display: true,
+        position: 'left' as const,
+        ticks: {
+          color: 'white',
+          stepSize: 5,
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.22)',
+        },
+        min: 0,
+        max: countMax,
+      },
+      y1: {
+        type: 'linear' as const,
+        display: true,
+        position: 'right' as const,
+        ticks: {
+          color: 'white',
+          stepSize: 50,
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        min: 0,
+        max: aceMax,
+      },
+    };
+
+    const mobileScales = {
+      x: {
+        type: 'linear' as const,
+        display: true,
+        position: 'top' as const,
+        ticks: {
+          color: 'white',
+          stepSize: 5,
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.22)',
+        },
+        min: 0,
+        max: countMax,
+      },
+      y: {
+        type: 'category' as const,
+        display: true,
+        position: 'left' as const,
+        ticks: {
+          color: 'white',
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.22)',
+        },
+      },
+      x1: {
+        type: 'linear' as const,
+        display: true,
+        position: 'bottom' as const,
+        ticks: {
+          color: 'white',
+          stepSize: 50,
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        min: 0,
+        max: aceMax,
+      },
+    };
+
+    return {
+      indexAxis: (mobile ? 'y' : 'x') as 'x' | 'y',
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
@@ -194,7 +294,7 @@ const TotalsChart = ({ totals }: TotalsChartProps) => {
           callbacks: {
             label: (context: TooltipItem<'line'>) => {
               const label = context.dataset.label || '';
-              const v = context.parsed.y;
+              const v = mobile ? context.parsed.x : context.parsed.y;
               if (v == null) return undefined;
               if (label.includes('Energy') || label.includes('ACE')) {
                 return `${label}: ${v.toFixed(1)}`;
@@ -204,53 +304,14 @@ const TotalsChart = ({ totals }: TotalsChartProps) => {
           },
         },
       },
-      scales: {
-        x: {
-          type: 'category' as const,
-          ticks: {
-            color: 'white',
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.22)',
-          },
-        },
-        y: {
-          type: 'linear' as const,
-          display: true,
-          position: 'left' as const,
-          ticks: {
-            color: 'white',
-            stepSize: 5,
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.22)',
-          },
-          min: 0,
-          max: countMax,
-        },
-        y1: {
-          type: 'linear' as const,
-          display: true,
-          position: 'right' as const,
-          ticks: {
-            color: 'white',
-            stepSize: 50,
-          },
-          grid: {
-            drawOnChartArea: false,
-          },
-          min: 0,
-          max: aceMax,
-        },
-      },
-    }),
-    [aceMax, countMax, selectedYearIndex],
-  );
+      scales: !mobile ? desktopScales : mobileScales,
+    };
+  }, [aceMax, countMax, mobile, selectedYearIndex]);
 
   if (!totals.length) return null;
 
   return (
-    <div className="relative lg:h-96 h-64 w-full">
+    <div className="relative h-[48rem] lg:h-96 w-full min-h-0">
       <Line data={chartData} options={options} plugins={[selectedYearLinePlugin]} />
     </div>
   );
